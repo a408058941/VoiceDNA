@@ -1,0 +1,90 @@
+import org.w3c.dom.DOMImplementation
+
+apply plugin: 'com.android.library'
+
+def config = rootProject.ext.ver
+def library = rootProject.ext.library
+
+
+
+android {
+    compileSdkVersion config.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+
+    }
+    buildTypes {
+        debug {
+            buildConfigField("boolean", "isDebug", "true")
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+        release {
+            buildConfigField("boolean", "isDebug", "false")
+            minifyEnabled false
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+//
+//    task makeJar(type: Copy) {
+//        //删除存在的
+//        delete 'build/libs/SkSDK.jar'
+//        //设置拷贝的文件
+//        from('build/intermediates/bundles/release/')
+//        //打进jar包后的文件目录
+//        into('build/libs/')
+//        //将classes.jar放入build/libs/目录下
+//        //include ,exclude参数来设置过滤
+//        //（我们只关心classes.jar这个文件）
+//        include('classes.jar')
+//        //指定打包的class
+//        include "com/test/**/*.class"
+//        //重命名
+//        rename ('classes.jar', 'SkSDK.jar')
+//
+//        include('libs','**/*.aar')
+//        include('com.squareup.okio:okio:1.14.0')
+//        include('com.squareup.okhttp3:okhttp:3.10.0')
+//        include('com.squareup.okhttp3:logging-interceptor:3.10.0')
+//        include('com.squareup.retrofit2:retrofit:2.4.0')
+//        include('com.squareup.retrofit2:converter-gson:2.8.2')
+//        include('com.squareup.retrofit2:converter-gson:2.8.2')
+//        include('com.squareup.retrofit2:adapter-rxjava2:2.4.0')
+//        include('io.reactivex.rxjava2:rxjava:2.1.12')
+//        include('com.trello.rxlifecycle2:rxlifecycle-components:2.2.1')
+//        include('cn.finalteam:okhttpfinal:2.0.7')
+//        include('com.orhanobut:logger:2.2.0')
+//    }
+//    makeJar.dependsOn(build)
+
+//    publishNonDefault true //默认不为发布版本
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    //RxJava2+Retrofit2 网络框架
+    api library.okio
+    api library.okhttp
+    api library.okhttp_logging
+    api library.retrofit2
+    api library.gson
+    api library.retrofit2_gson
+    api library.retrofit2_adapter
+    api library.rxjava2
+    api library.rxlifecycle2_components
+    //屏幕适配
+    api library.autosize
+    /*网络*/
+    api 'cn.finalteam:okhttpfinal:2.0.7'
+    api library.logger
+}

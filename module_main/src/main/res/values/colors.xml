@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_71acff">#3CBA9F</color>
+    <color name="text_dark">#999999</color>
+    <color name="White">#ffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="tetx_black">#212121</color>
+    <color name="setting_button_background">#ececec</color>
+    <color name="tetx_565656">#565656</color>
+    <color name="Line_f5">#F5F5F5</color>
+    <color name="split_line">#11112233</color>
+    <color name="text2">#333333</color>
+    <color name="split_3232">#323232</color>
+</resources>

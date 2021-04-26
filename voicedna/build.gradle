@@ -1,0 +1,62 @@
+import org.w3c.dom.DOMImplementation
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+def config = rootProject.ext.ver
+android {
+    compileSdkVersion config.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+//
+//    task makeJar(type: Copy) {
+//        //删除存在的
+//        delete 'build/libs/SkSDK.jar'
+//        //设置拷贝的文件
+//        from('build/intermediates/bundles/release/')
+//        //打进jar包后的文件目录
+//        into('build/libs/')
+//        //将classes.jar放入build/libs/目录下
+//        //include ,exclude参数来设置过滤
+//        //（我们只关心classes.jar这个文件）
+//        include('classes.jar')
+//        //指定打包的class
+//        include "com/test/**/*.class"
+//        //重命名
+//        rename ('classes.jar', 'SkSDK.jar')
+//        include()
+//        DOMImplementation
+//    }
+//    makeJar.dependsOn(build)
+
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation project(':baselibrary')
+    implementation library.butterknife
+    annotationProcessor library.butterknife_compiler
+
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+}

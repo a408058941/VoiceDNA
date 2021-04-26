@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 圆形图片 -->
+    <declare-styleable name="roundedimageview">
+        <attr name="border_thickness" format="dimension"/>
+        <attr name="border_inside_color" format="color"/>
+        <attr name="border_outside_color" format="color"/>
+        <attr name="round" format="dimension"/>
+    </declare-styleable> <declare-styleable name="RatingBar">
+    <!--尺寸值-->
+    <attr name="starImageSize" format="dimension" />
+    <!--星星间距-->
+    <attr name="starPadding" format="dimension" />
+    <!--星星总数-->
+    <attr name="starCount" format="integer" />
+    <!--空白的星星资源文件值-->
+    <attr name="starEmpty" format="reference" />
+    <!--满星资源文件值-->
+    <attr name="starFill" format="reference" />
+    <!--半星资源文件值-->
+    <attr name="starHalf" format="reference" />
+    <!--是否可点击boolean值-->
+    <attr name="clickable" format="boolean" />
+    <!--当前进度float值-->
+    <attr name="starStep" format="float" />
+    <!--每次进度方式的值，整星还是半星-->
+    <attr name="stepSize">
+        <enum name="Half" value="0" />
+        <enum name="Full" value="1" />
+    </attr>
+</declare-styleable>
+    <declare-styleable name="ComSectorView">
+        <attr name="backgroundColor" format="color"/>
+        <!--圆的颜色-->
+        <attr name="circleColor" format="color"/>
+        <attr name="startAngle" format="float"/>
+        <!--内环颜色-->
+        <attr name="annulusColor" format="color"/>
+        <!--文字-->
+        <attr name="SectorOneText" format="string"/>
+
+        <attr name="SectorTwoText" format="string"/>
+        <!--文字颜色-->
+        <attr name="textColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
+        <!--内环半径-->
+        <attr name="annulusRadius" format="float"/>
+    </declare-styleable>
+    <declare-styleable name="AmountView">
+        <!-- 左右2边+-按钮的宽度 -->
+        <attr name="btnWidth" format="dimension" />
+        <!-- 中间TextView的宽度 -->
+        <attr name="tvWidth" format="dimension" />
+        <!--<attr name="tvColor" format="color"/>-->
+        <attr name="tvTextSize" format="dimension"/>
+        <attr name="btnTextSize" format="dimension"/>
+    </declare-styleable>
+</resources>
