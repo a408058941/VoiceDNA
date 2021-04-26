@@ -73,18 +73,18 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     //RxJava2+Retrofit2 网络框架
-    api library.okio
-    api library.okhttp
-    api library.okhttp_logging
-    api library.retrofit2
-    api library.gson
-    api library.retrofit2_gson
-    api library.retrofit2_adapter
+    implementation library.okio
+    implementation library.okhttp
+    implementation library.okhttp_logging
+    implementation library.retrofit2
+    implementation library.gson
+    implementation library.retrofit2_gson
+    implementation library.retrofit2_adapter
     api library.rxjava2
-    api library.rxlifecycle2_components
+    implementation library.rxlifecycle2_components
     //屏幕适配
-    api library.autosize
+    implementation library.autosize
     /*网络*/
-    api 'cn.finalteam:okhttpfinal:2.0.7'
-    api library.logger
+    implementation 'cn.finalteam:okhttpfinal:2.0.7'
+    implementation library.logger
 }
