@@ -2,7 +2,9 @@ package com.common.voicedna.api;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -320,6 +322,9 @@ public class DnaPresenter extends BasePresenter {
                             @Override
                             public void onError(Throwable t) {
                                 super.onError(t);
+                                if (i == 10) {
+                                    scheduledFuture.cancel(true);
+                                }
                                 callback.onError(t.toString());
                             }
                         });
@@ -354,6 +359,17 @@ public class DnaPresenter extends BasePresenter {
     public void Voiceoperate(String groupId, String fileId, int targetType, String targetUser, List<AutoRegisData> autoRegis,DnaCallback<VoiceoperateDetailBean> callback) {
         List<String> fileIds=new ArrayList<>();
         fileIds.add(fileId);
+        if (targetType==1){
+            if (TextUtils.isEmpty(targetUser)){
+                callback.onError("1:1比对用户不能为空");
+                return;
+            }
+        }else {
+            if (!TextUtils.isEmpty(targetUser)){
+                callback.onError("1:N 比对用户必须为空");
+                return;
+            }
+        }
         DnaPresenter.getInstance().VoiceoperateTask(groupId, fileIds, targetType, targetUser, autoRegis).safeSubscribe(new RxCallback<VoiceoperateTaskBean>() {
             @Override
             public void onSuccess(@Nullable VoiceoperateTaskBean data) {
@@ -393,6 +409,9 @@ public class DnaPresenter extends BasePresenter {
                             @Override
                             public void onError(Throwable t) {
                                 super.onError(t);
+                                if (i == 10) {
+                                    scheduledFuture.cancel(true);
+                                }
                                 callback.onError(t.toString());
                             }
                         });

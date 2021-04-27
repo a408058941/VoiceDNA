@@ -12,7 +12,9 @@ import com.common.voicedna.api.DnaPresenter;
 import com.common.voicedna.bean.FileBean;
 import com.common.voicedna.bean.TokenBean;
 import com.common.voicedna.bean.VoiceoperateDetailBean;
+import com.common.voicedna.bean.VoiceprintTaskDetailBean;
 import com.common.voicedna.data.AutoRegisData;
+import com.common.voicedna.network.RxCallback;
 import com.common.voicedna.utils.DnaCallback;
 import com.common.voicedna.utils.UuidUtis;
 import com.guiying.module.main.R;
@@ -49,7 +51,12 @@ public class MainActivity extends Activity {
 
             }
         });
-
+        DnaPresenter.getInstance().group_create("111").safeSubscribe(new RxCallback<String>() {
+            @Override
+            public void onSuccess(@Nullable String string) {
+                Log.e("1111","11111");
+            }
+        });
         //获取Token
 //        DnaPresenter.getInstance().getToken().safeSubscribe(new RxCallback<TokenBean>() {
 //            @Override
@@ -83,8 +90,8 @@ public class MainActivity extends Activity {
 //        });
 
 
-//        //注册
-//        String pate = FileUtil.getExternalStorageDir().getAbsolutePath() + "/1111111.wav";
+        //注册
+//        String pate =Environment.getExternalStorageDirectory().getAbsolutePath()+ "/1111111.wav";
 //        DnaPresenter.getInstance().Uploadbycode(new File(pate), 0, UuidUtis.randomUuid(), new DnaCallback<FileBean>() {
 //
 //            @Override
