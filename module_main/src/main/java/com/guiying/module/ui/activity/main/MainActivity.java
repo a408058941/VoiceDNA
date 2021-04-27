@@ -15,8 +15,6 @@ import com.common.voicedna.bean.VoiceoperateDetailBean;
 import com.common.voicedna.data.AutoRegisData;
 import com.common.voicedna.utils.DnaCallback;
 import com.common.voicedna.utils.UuidUtis;
-import com.fd.baselibrary.network.RxCallback;
-import com.fd.baselibrary.utils.SPManager;
 import com.guiying.module.main.R;
 
 import java.io.File;
@@ -39,7 +37,18 @@ public class MainActivity extends Activity {
 
 
     protected void initialize() {
-        DnaPresenter.getInstance().init(this,"IFCvHTsoBnP16q5noSBOjSBrMncBAF7n", "0hcVkdzbmb6Yvp6HKaVkIRMI45xP8OmX");
+        DnaPresenter.getInstance().init(this, "IFCvHTsoBnP16q5noSBOjSBrMncBAF7n", "0hcVkdzbmb6Yvp6HKaVkIRMI45xP8OmX", new DnaCallback<TokenBean>() {
+            @Override
+            public void onSuccess(@Nullable TokenBean data) {
+
+
+            }
+
+            @Override
+            public void onError(String throwable) {
+
+            }
+        });
 
         //获取Token
 //        DnaPresenter.getInstance().getToken().safeSubscribe(new RxCallback<TokenBean>() {

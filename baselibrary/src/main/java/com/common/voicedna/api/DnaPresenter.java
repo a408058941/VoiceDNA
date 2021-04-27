@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.common.voicedna.VoiceRecognize.VoiceRegisterConfig;
+import com.common.voicedna.base.BasePresenter;
 import com.common.voicedna.bean.GroupBean;
 import com.common.voicedna.bean.RefreshTokenBean;
 import com.common.voicedna.bean.TokenBean;
@@ -17,16 +18,15 @@ import com.common.voicedna.bean.VoiceprintTaskDetailBean;
 import com.common.voicedna.data.AutoRegisData;
 import com.common.voicedna.data.VoiceoperateTask;
 import com.common.voicedna.data.VoiceprintTaskData;
+import com.common.voicedna.network.NetworkTransformer;
+import com.common.voicedna.network.RxCallback;
 import com.common.voicedna.utils.AppExecutors;
 import com.common.voicedna.utils.DnaCallback;
 import com.common.voicedna.utils.DnaNetworkUtils;
+import com.common.voicedna.utils.InstanceUtil;
 import com.common.voicedna.utils.NetworkUpload;
-import com.fd.baselibrary.base.BasePresenter;
-import com.fd.baselibrary.network.NetworkTransformer;
-import com.fd.baselibrary.network.RxCallback;
-import com.fd.baselibrary.utils.InstanceUtil;
-import com.fd.baselibrary.utils.SPManager;
-import com.fd.baselibrary.utils.SPUtil;
+import com.common.voicedna.utils.SPManager;
+import com.common.voicedna.utils.SPUtil;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -58,7 +58,14 @@ public class DnaPresenter extends BasePresenter {
         return instance;
     }
 
-    public void init(Context context,String APP_ID, String APPSECRET ){
+    /**
+     * 初始化
+     * @param context
+     * @param APP_ID
+     * @param APPSECRET
+     * @param callback
+     */
+    public void init(Context context,String APP_ID, String APPSECRET,DnaCallback<TokenBean> callback ){
         DnaConstant.APP_ID=APP_ID;
         DnaConstant. APPSECRET=APPSECRET;
         //初始化OkHttp
@@ -66,10 +73,23 @@ public class DnaPresenter extends BasePresenter {
         builder.setTimeout(20000);
         OkHttpFinal.getInstance().init(builder.build());
         SPUtil.getSP(context);
+        DnaPresenter.getInstance().getToken().safeSubscribe(new RxCallback<TokenBean>() {
+            @Override
+            public void onSuccess(@Nullable TokenBean data) {
+                SPManager.setUserToken(data.getToken());
+                callback.onSuccess(data);
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                super.onError(t);
+                callback.onError(t.toString());
+            }
+        });
 
     }
 
-//
 //    /**
 //     * 获取TOKEN
 //     *
@@ -101,6 +121,26 @@ public class DnaPresenter extends BasePresenter {
 
     }
 
+    /**
+     * 刷新Token
+     * @param callback
+     */
+    public void  refreshToken(DnaCallback<RefreshTokenBean> callback){
+        DnaPresenter.getInstance().refresh_token().safeSubscribe(new RxCallback<RefreshTokenBean>() {
+            @Override
+            public void onSuccess(@Nullable RefreshTokenBean data) {
+                SPManager.setUserToken(data.getToken());
+                callback.onSuccess(data);
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                super.onError(t);
+                callback.onError(t.toString());
+            }
+        });
+}
     /**
      * 刷新TOKEN
      *

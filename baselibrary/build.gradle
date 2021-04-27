@@ -34,7 +34,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-//
 //    task makeJar(type: Copy) {
 //        //删除存在的
 //        delete 'build/libs/SkSDK.jar'
@@ -82,8 +81,6 @@ dependencies {
     implementation library.retrofit2_adapter
     api library.rxjava2
     implementation library.rxlifecycle2_components
-    //屏幕适配
-    implementation library.autosize
     /*网络*/
     implementation 'cn.finalteam:okhttpfinal:2.0.7'
     implementation library.logger

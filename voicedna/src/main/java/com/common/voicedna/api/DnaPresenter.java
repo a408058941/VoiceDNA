@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -41,8 +40,6 @@ import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
 import cn.finalteam.okhttpfinal.RequestParams;
 import io.reactivex.Observable;
-
-import static com.common.voicedna.api.DnaConstant.APPSECRET;
 
 public class DnaPresenter extends BasePresenter {
     private static DnaPresenter instance;

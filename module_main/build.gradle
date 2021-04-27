@@ -52,7 +52,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation project(':baselibrary')
-//    implementation project(':voicedna')
     implementation library.butterknife
     annotationProcessor library.butterknife_compiler
 }

@@ -1,7 +1,8 @@
 package com.common.voicedna.VoiceRecognize;
 
-import com.fd.baselibrary.utils.BaseSPManager;
-import com.fd.baselibrary.utils.SPUtil;
+
+import com.common.voicedna.utils.BaseSPManager;
+import com.common.voicedna.utils.SPUtil;
 
 /**
  * 注册配置

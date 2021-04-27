@@ -3,7 +3,6 @@ package com.common.voicedna.utils;
 import android.util.Log;
 
 import com.common.voicedna.api.DnaConstant;
-import com.fd.baselibrary.utils.EmptyUtil;
 
 import java.io.IOException;
 import java.util.Map;

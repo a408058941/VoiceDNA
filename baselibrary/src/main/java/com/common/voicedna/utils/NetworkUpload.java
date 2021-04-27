@@ -1,11 +1,9 @@
 package com.common.voicedna.utils;
 
 
+import com.common.voicedna.api.RetrofitClientJsonObject;
 import com.common.voicedna.bean.FileBean;
-import com.fd.baselibrary.api.RetrofitClientJsonObject;
-import com.fd.baselibrary.network.BaseBean;
-import com.fd.baselibrary.utils.EmptyUtil;
-import com.fd.baselibrary.utils.SPManager;
+import com.common.voicedna.network.BaseBean;
 import com.google.gson.Gson;
 
 import java.io.File;

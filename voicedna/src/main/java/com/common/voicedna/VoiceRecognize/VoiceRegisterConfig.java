@@ -1,7 +1,6 @@
 package com.common.voicedna.VoiceRecognize;
 
 import com.fd.baselibrary.utils.BaseSPManager;
-import com.fd.baselibrary.utils.SPManager;
 import com.fd.baselibrary.utils.SPUtil;
 
 /**

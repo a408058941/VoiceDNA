@@ -67,6 +67,8 @@ android {
             debuggable true
         }
     }
+
+
 }
 
 dependencies {

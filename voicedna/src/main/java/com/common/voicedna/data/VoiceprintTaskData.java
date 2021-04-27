@@ -1,7 +1,5 @@
 package com.common.voicedna.data;
 
-import com.fd.baselibrary.utils.SPManager;
-
 import java.util.List;
 
 public class VoiceprintTaskData {

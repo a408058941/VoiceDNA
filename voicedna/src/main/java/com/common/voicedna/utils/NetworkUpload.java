@@ -1,8 +1,6 @@
 package com.common.voicedna.utils;
 
 
-import android.util.Log;
-
 import com.common.voicedna.bean.FileBean;
 import com.fd.baselibrary.api.RetrofitClientJsonObject;
 import com.fd.baselibrary.network.BaseBean;

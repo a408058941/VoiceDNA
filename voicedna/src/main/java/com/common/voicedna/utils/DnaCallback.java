@@ -2,10 +2,6 @@ package com.common.voicedna.utils;
 
 import androidx.annotation.Nullable;
 
-import com.fd.baselibrary.network.ApiException;
-
-import io.reactivex.Observer;
-
 public interface DnaCallback<T>  {
 
     /*** 对返回数据进行操作的回调， UI线程 */

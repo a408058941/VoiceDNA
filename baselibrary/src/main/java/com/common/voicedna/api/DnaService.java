@@ -7,7 +7,7 @@ import com.common.voicedna.bean.VoiceoperateDetailBean;
 import com.common.voicedna.bean.VoiceoperateTaskBean;
 import com.common.voicedna.bean.VoiceprintTaskBean;
 import com.common.voicedna.bean.VoiceprintTaskDetailBean;
-import com.fd.baselibrary.network.BaseBean;
+import com.common.voicedna.network.BaseBean;
 
 import java.util.List;
 
