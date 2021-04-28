@@ -37,9 +37,8 @@
         android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/vehicle_vrr"
-        android:label="云借力"
+        android:label="声纹DNA"
         android:supportsRtl="true"
-        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,label,theme,name,allowBackup">
         <!-- Android 7.0 文件共享配置，必须配置 -->
