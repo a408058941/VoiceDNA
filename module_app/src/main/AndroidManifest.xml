@@ -38,9 +38,13 @@
         android:allowBackup="false"
         android:icon="@mipmap/vehicle_vrr"
         android:label="声纹DNA"
+
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,label,theme,name,allowBackup">
+
+<!--        android:requestLegacyExternalStorage="true"-->
+
         <!-- Android 7.0 文件共享配置，必须配置 -->
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
 

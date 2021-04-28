@@ -25,6 +25,7 @@ import com.common.voicedna.network.RxCallback;
 import com.common.voicedna.utils.AppExecutors;
 import com.common.voicedna.utils.DnaCallback;
 import com.common.voicedna.utils.DnaNetworkUtils;
+import com.common.voicedna.utils.EmptyUtil;
 import com.common.voicedna.utils.InstanceUtil;
 import com.common.voicedna.utils.NetworkUpload;
 import com.common.voicedna.utils.SPManager;
@@ -258,15 +259,25 @@ public class DnaPresenter extends BasePresenter {
     /**
      * 上传图片
      *
+     * @param fileName 注册昵称 type==0必传
      * @param file 音频文件
      * @param type 音频用途 0注册,1验证比对
      * @param id   批量会话ID,需生成UUID格式（具体作用看接口描述）,格式为:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
      */
-    public void Uploadbycode(File file, int type, String id, DnaCallback dnaCallback) {
+    public void Uploadbycode(String fileName,File file, int type, String id, DnaCallback dnaCallback) {
         RequestParams params = new RequestParams();
         List<File> files = new ArrayList<>();
         files.add(file);
-        params.addFormDataPartFiles("file", files);
+        if (type==0){
+            if (EmptyUtil.isEmpty(fileName)){
+                dnaCallback.onError("请输入昵称");
+                return;
+            }
+            params.addFormDataPartFiles(fileName, files);
+        }else {
+            params.addFormDataPartFiles("file", files);
+        }
+
         params.addHeader(SPManager.getUserTokenKey(), SPManager.getUserToken());
         params.addHeader("x-use-for", type);
         params.addHeader("x-batch-id", id);
