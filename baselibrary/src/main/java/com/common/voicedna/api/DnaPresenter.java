@@ -63,16 +63,17 @@ public class DnaPresenter extends BasePresenter {
 
     /**
      * 初始化
+     *
      * @param context
      * @param APP_ID
      * @param APPSECRET
      * @param callback
      */
-    public void init(Context context,String APP_ID, String APPSECRET,DnaCallback<TokenBean> callback ){
-        DnaConstant.APP_ID=APP_ID;
-        DnaConstant. APPSECRET=APPSECRET;
+    public void init(Context context, String APP_ID, String APPSECRET, DnaCallback<TokenBean> callback) {
+        DnaConstant.APP_ID = APP_ID;
+        DnaConstant.APPSECRET = APPSECRET;
         //初始化OkHttp
-        OkHttpFinalConfiguration.Builder   builder = new OkHttpFinalConfiguration.Builder();
+        OkHttpFinalConfiguration.Builder builder = new OkHttpFinalConfiguration.Builder();
         builder.setTimeout(20000);
         OkHttpFinal.getInstance().init(builder.build());
         SPUtil.getSP(context);
@@ -93,7 +94,7 @@ public class DnaPresenter extends BasePresenter {
 
     }
 
-//    /**
+    //    /**
 //     * 获取TOKEN
 //     *
 //     * @param algorithm 签名算法,目前仅支持HMACSHA256
@@ -126,9 +127,10 @@ public class DnaPresenter extends BasePresenter {
 
     /**
      * 刷新Token
+     *
      * @param callback
      */
-    public void  refreshToken(DnaCallback<RefreshTokenBean> callback){
+    public void refreshToken(DnaCallback<RefreshTokenBean> callback) {
         DnaPresenter.getInstance().refresh_token().safeSubscribe(new RxCallback<RefreshTokenBean>() {
             @Override
             public void onSuccess(@Nullable RefreshTokenBean data) {
@@ -143,7 +145,8 @@ public class DnaPresenter extends BasePresenter {
                 callback.onError(t.toString());
             }
         });
-}
+    }
+
     /**
      * 刷新TOKEN
      *
@@ -237,12 +240,13 @@ public class DnaPresenter extends BasePresenter {
             bean.setFilterType(VoiceRegisterConfig.getVerificationFiltertype());
             bean.setVoiceFilter(VoiceRegisterConfig.getVerificationVoiceFilter());
         }
-        String json=new Gson().toJson(bean);
+        String json = new Gson().toJson(bean);
         return DnaRetrofitClientapi.getTestService()
                 .VoiceoperateTask(json)
                 .compose(new NetworkTransformer<>(this));
 
     }
+
     /**
      * 查看注册入库结果
      *
@@ -259,25 +263,15 @@ public class DnaPresenter extends BasePresenter {
     /**
      * 上传图片
      *
-     * @param fileName 注册昵称 type==0必传
-     * @param file 音频文件
-     * @param type 音频用途 0注册,1验证比对
-     * @param id   批量会话ID,需生成UUID格式（具体作用看接口描述）,格式为:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+     * @param file     音频文件
+     * @param type     音频用途 0注册,1验证比对
+     * @param id       批量会话ID,需生成UUID格式（具体作用看接口描述）,格式为:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
      */
-    public void Uploadbycode(String fileName,File file, int type, String id, DnaCallback dnaCallback) {
+    public void Uploadbycode(File file, int type, String id, DnaCallback dnaCallback) {
         RequestParams params = new RequestParams();
         List<File> files = new ArrayList<>();
         files.add(file);
-        if (type==0){
-            if (EmptyUtil.isEmpty(fileName)){
-                dnaCallback.onError("请输入昵称");
-                return;
-            }
-            params.addFormDataPartFiles(fileName, files);
-        }else {
-            params.addFormDataPartFiles("file", files);
-        }
-
+        params.addFormDataPartFiles("file", files);
         params.addHeader(SPManager.getUserTokenKey(), SPManager.getUserToken());
         params.addHeader("x-use-for", type);
         params.addHeader("x-batch-id", id);
@@ -367,16 +361,16 @@ public class DnaPresenter extends BasePresenter {
      * @param targetUser 1:1比对用户不能为空 1:N 比对用户必须为空     取比对用户的tagName
      * @param autoRegis  自动入库条件,不传条件代表不开启
      */
-    public void Voiceoperate(String groupId, String fileId, int targetType, String targetUser, List<AutoRegisData> autoRegis,DnaCallback<VoiceoperateDetailBean> callback) {
-        List<String> fileIds=new ArrayList<>();
+    public void Voiceoperate(String groupId, String fileId, int targetType, String targetUser, List<AutoRegisData> autoRegis, DnaCallback<VoiceoperateDetailBean> callback) {
+        List<String> fileIds = new ArrayList<>();
         fileIds.add(fileId);
-        if (targetType==1){
-            if (TextUtils.isEmpty(targetUser)){
+        if (targetType == 1) {
+            if (TextUtils.isEmpty(targetUser)) {
                 callback.onError("1:1比对用户不能为空");
                 return;
             }
-        }else {
-            if (!TextUtils.isEmpty(targetUser)){
+        } else {
+            if (!TextUtils.isEmpty(targetUser)) {
                 callback.onError("1:N 比对用户必须为空");
                 return;
             }
@@ -402,7 +396,7 @@ public class DnaPresenter extends BasePresenter {
                         DnaPresenter.getInstance().VoiceoperateDetail(taskId).safeSubscribe(new RxCallback<VoiceoperateDetailBean>() {
                             @Override
                             public void onSuccess(@Nullable VoiceoperateDetailBean data) {
-                                Log.e("11111",data.getTaskResults().get(0).getDescription());
+                                Log.e("11111", data.getTaskResults().get(0).getDescription());
                                 if (data.getTaskResults().get(0).getFlag() != null) {
                                     scheduledFuture.cancel(true);
                                     callback.onSuccess(data);
@@ -447,8 +441,8 @@ public class DnaPresenter extends BasePresenter {
 
     }
 
-    public  void  release(){
-        if (scheduledFuture!=null){
+    public void release() {
+        if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
         }
     }

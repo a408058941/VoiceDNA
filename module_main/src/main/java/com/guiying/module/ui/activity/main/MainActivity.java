@@ -16,6 +16,7 @@ import com.common.voicedna.bean.VoiceprintTaskDetailBean;
 import com.common.voicedna.data.AutoRegisData;
 import com.common.voicedna.network.RxCallback;
 import com.common.voicedna.utils.DnaCallback;
+import com.common.voicedna.utils.SPManager;
 import com.common.voicedna.utils.UuidUtis;
 import com.guiying.module.main.R;
 
