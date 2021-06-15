@@ -6,7 +6,7 @@ import java.util.List;
 
 public class VoiceprintTaskDetailBean {
 
-   private String taskId;//任务Id
+    private String taskId;//任务Id
     private String fileId;//文件ID
     private String groupId;//声纹组ID
     private String groupName;//声纹组名
@@ -14,6 +14,15 @@ public class VoiceprintTaskDetailBean {
     private String description;//status的补充描述
     private boolean isDia;//是否分割
     private List<TagListData> tagList;//注册结果,若开启分割可能会注册多个声纹目标
+    private boolean completed;
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
     public String getTaskId() {
         return taskId;

@@ -82,7 +82,7 @@ public class ParameterInterceptorJsonArray implements Interceptor {
             if (oldRequestBody instanceof FormBody) {
                 FormBody oldBody = (FormBody) oldRequestBody;
                 //构建一个新的请求实体内容
-                FormBody.Builder builder = new FormBody.Builder(Util.UTF_8);
+                FormBody.Builder builder = new FormBody.Builder();
                 JSONArray json = null;
                 //1.添加老的参数
                 for (int i = 0; i < oldBody.size(); i++) {

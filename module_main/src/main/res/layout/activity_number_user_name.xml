@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/voice_background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/voice_title_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/voice_title_background">
+
+            <ImageView
+                android:id="@+id/voice_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@mipmap/voice_back" />
+
+            <TextView
+                android:id="@+id/voice_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/ed_name"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/bg_shape_white"
+            android:textColor="@color/voice_title_background"
+            android:paddingLeft="10dp"
+            android:maxLength="10"
+            android:textColorHint="@color/voice_title_background"
+            android:hint="@string/voice_hint"/>
+
+        <TextView
+            android:id="@+id/tv_next"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/voice_title_background"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/voice_white"
+            android:textSize="29dp" />
+    </LinearLayout>
+
+
+</LinearLayout>

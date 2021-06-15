@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/voice_background"
+    android:orientation="vertical"
+    tools:context="com.guiying.module.ui.activity.main.SplashActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_title">
+
+        <RelativeLayout
+            android:id="@+id/voice_title_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:id="@+id/voice_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:padding="10dp"
+                android:src="@mipmap/voice_back"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/voice_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="设置"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="137dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:textSize="16sp"
+            android:textColor="@color/voice_black"
+            android:text="模式" />
+
+        <RadioGroup
+            android:id="@+id/radio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:layout_marginLeft="24dp"
+                android:text="自由文本"
+                android:textColor="#232323" />
+
+            <RadioButton
+                android:id="@+id/radioButton1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:text="动态数字"
+                android:textColor="#232323" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/ed_appid"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="27dp"
+        android:textSize="14sp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/bg_shape_white"
+        android:hint="@string/voice_app_id"
+        android:paddingLeft="10dp"
+        android:text="IFCvHTsoBnP16q5noSBOjSBrMncBAF7n"
+        android:textColor="@color/voice_title_background"
+        android:textColorHint="@color/voice_title_background" />
+
+    <EditText
+        android:id="@+id/ed_appsecret"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="12dp"
+        android:textSize="14sp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/bg_shape_white"
+        android:hint="@string/voice_appsecret"
+        android:paddingLeft="10dp"
+        android:text="0hcVkdzbmb6Yvp6HKaVkIRMI45xP8OmX"
+        android:textColor="@color/voice_title_background"
+        android:textColorHint="@color/voice_title_background" />
+
+    <Button
+        android:id="@+id/test_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@drawable/bg_shape_blue"
+        android:text="确定"
+        android:textColor="@color/white"
+        android:textSize="30dp" />
+
+
+</LinearLayout>

@@ -40,7 +40,7 @@
         android:label="声纹DNA"
 
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@android:style/Theme.NoTitleBar"
         tools:replace="android:icon,label,theme,name,allowBackup">
 
 <!--        android:requestLegacyExternalStorage="true"-->

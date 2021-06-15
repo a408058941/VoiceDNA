@@ -7,7 +7,7 @@ public class VoiceoperateTask {
     private List<String> fileIds; //文件ID数组
     private  Integer targetType; //比对类型 1：声纹1:1验证 0：声纹1：N检索
     private  String targetUser;// 1:1比对用户不能为空 1:N 比对用户必须为空     取比对用户的tagName
-    private  boolean vadSwicth; //质检开关,不传默认false
+    private  boolean vadSwitch; //质检开关,不传默认false
     private  Integer vadLevel;  //质检值:1.宽松，3中等，5严格。 若vadSwicth为true则必传该字段
     private  boolean diaSwitch;//分割开关,不传默认false
     private  Integer filterType;//分割过滤类型:-1:不过滤,0关键字过滤,1声纹过滤。  若diaSwitch为true则必传
@@ -17,12 +17,12 @@ public class VoiceoperateTask {
     public VoiceoperateTask() {
     }
 
-    public VoiceoperateTask(String groupId, List<String> fileIds, int targetType, String targetUser, boolean vadSwicth, boolean diaSwitch, List<AutoRegisData> autoRegis) {
+    public VoiceoperateTask(String groupId, List<String> fileIds, int targetType, String targetUser, boolean vadSwitch, boolean diaSwitch, List<AutoRegisData> autoRegis) {
         this.groupId = groupId;
         this.fileIds = fileIds;
         this.targetType = targetType;
         this.targetUser = targetUser;
-        this.vadSwicth = vadSwicth;
+        this.vadSwitch = vadSwitch;
         this.diaSwitch = diaSwitch;
         this.autoRegis = autoRegis;
     }
@@ -60,11 +60,11 @@ public class VoiceoperateTask {
     }
 
     public boolean isVadSwicth() {
-        return vadSwicth;
+        return vadSwitch;
     }
 
-    public void setVadSwicth(boolean vadSwicth) {
-        this.vadSwicth = vadSwicth;
+    public void setVadSwicth(boolean vadSwitch) {
+        this.vadSwitch = vadSwitch;
     }
 
     public int getVadLevel() {

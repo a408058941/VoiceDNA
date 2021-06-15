@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/voice_background"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/voice_title_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/bg_title">
+
+
+            <TextView
+                android:id="@+id/voice_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/voice_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_centerVertical="true"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:src="@mipmap/voice_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_doc"
+            android:layout_width="wrap_content"
+            android:text="请先输入验证的用户名，再录入比对声纹"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="100dp"
+            android:textSize="16sp"
+            android:textColor="@color/text_black"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/ed_name"
+            android:layout_width="match_parent"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/bg_shape_white"
+            android:textColor="@color/text_black"
+            android:paddingLeft="10dp"
+            android:maxLength="10"
+            android:hint="@string/voice_hint"/>
+
+        <TextView
+            android:id="@+id/tv_next"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_shape_blue"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/voice_white"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+
+</LinearLayout>

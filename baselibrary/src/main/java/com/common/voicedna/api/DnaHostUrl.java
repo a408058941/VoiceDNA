@@ -1,8 +1,8 @@
 package com.common.voicedna.api;
 
 public interface DnaHostUrl {
-    String HOST_URL = "https://test.cloudv3.voiceaitech.com/";
-
+    String HOST_URL = "https://test.cloudv3.voiceaitech.com";
+    String fileServer = "https://test.dna.upload.voiceaitech.com";
 
     //获取TOKEN
     public static final String TOKEN = HOST_URL + "api/dna/application/token";

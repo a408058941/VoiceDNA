@@ -15,12 +15,21 @@ public class VoiceoperateDetailBean {
      */
 
     private String taskId; //  任务Id
-    private Object fileId; //  文件ID
+    private String fileId; //  文件ID
     private String groupId; //  目标分组ID
     private String groupName; //  目标分组名
     private String targetUser; //  目标用户,1:N时为空
     private Integer targetType; //  比对类型 1：声纹1:1验证 0：声纹1：N检索
     private List<TaskResultsBean> taskResults; //  若开启分割,可能会产生多个结果项
+    private boolean completed;
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
     public String getTaskId() {
         return taskId;
@@ -30,11 +39,11 @@ public class VoiceoperateDetailBean {
         this.taskId = taskId;
     }
 
-    public Object getFileId() {
+    public String getFileId() {
         return fileId;
     }
 
-    public void setFileId(Object fileId) {
+    public void setFileId(String fileId) {
         this.fileId = fileId;
     }
 

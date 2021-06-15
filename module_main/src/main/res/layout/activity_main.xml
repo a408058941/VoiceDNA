@@ -1,9 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<TextView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="32432432"/>
+    android:background="@color/bg_title"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:drawableLeft="@mipmap/set"
+        android:drawablePadding="10dp"
+        android:padding="10dp"
+        android:text="设置"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+<ImageView
+    android:id="@+id/image_log"
+    android:layout_width="wrap_content"
+    android:src="@mipmap/logo"
+    android:layout_marginTop="80dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="wrap_content"></ImageView>
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
+        android:text="VoiceDNA-test"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"></TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/test_1"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="32dp"
+            android:gravity="center_vertical"
+            android:drawableLeft="@mipmap/voicep"
+            android:drawablePadding="25dp"
+            android:paddingLeft="32dp"
+            android:background="@drawable/bg_shape_white"
+            android:text="声纹注册"
+            android:drawableRight="@mipmap/go"
+            android:paddingRight="32dp"
+            android:textStyle="bold"
+            android:textColor="@color/text_blue"
+            android:textSize="18dp" />
+
+
+        <Button
+            android:id="@+id/test_2"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:drawableLeft="@mipmap/a11"
+            android:drawablePadding="25dp"
+            android:paddingLeft="32dp"
+            android:background="@drawable/bg_shape_white"
+            android:text="1:1验证"
+            android:textStyle="bold"
+            android:drawableRight="@mipmap/go"
+            android:paddingRight="32dp"
+            android:textColor="@color/text_blue"
+            android:textSize="18dp" />
+
+        <Button
+            android:id="@+id/test_3"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:drawableLeft="@mipmap/a1n"
+            android:drawableRight="@mipmap/go"
+            android:paddingRight="32dp"
+            android:drawablePadding="25dp"
+            android:paddingLeft="32dp"
+            android:background="@drawable/bg_shape_white"
+            android:text="1:N检索"
+            android:textStyle="bold"
+            android:textColor="@color/text_blue"
+            android:textSize="18dp" />
+    </LinearLayout>
 </LinearLayout>

@@ -9,6 +9,6 @@ public interface DnaCallback<T>  {
 
 
     /*** 请求失败，响应错误，数据解析错误等，都会回调该方法， UI线程 */
-    void onError(String throwable);
+    void onError(int  code,String msg);
 
 }

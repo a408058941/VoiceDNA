@@ -2,7 +2,6 @@ package com.common.voicedna.utils;
 
 
 /**
- * Created by baixiaokang on 16/4/30.
  */
 public class InstanceUtil {
 

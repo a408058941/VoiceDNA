@@ -8,6 +8,7 @@ def library = rootProject.ext.library
 
 
 android {
+    lintOptions{ abortOnError false }
     compileSdkVersion config.compileSdkVersion
 
     defaultConfig {
@@ -15,19 +16,6 @@ android {
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode
         versionName config.versionName
-
-    }
-    buildTypes {
-        debug {
-            buildConfigField("boolean", "isDebug", "true")
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
-        }
-        release {
-            buildConfigField("boolean", "isDebug", "false")
-            minifyEnabled false
-            consumerProguardFiles 'proguard-rules.pro'
-        }
     }
 
     compileOptions {
@@ -38,7 +26,7 @@ android {
 //        //删除存在的
 //        delete 'build/libs/SkSDK.jar'
 //        //设置拷贝的文件
-//        from('build/intermediates/bundles/release/')
+//        from('build/intermediates/aar_main_jar/release/')
 //        //打进jar包后的文件目录
 //        into('build/libs/')
 //        //将classes.jar放入build/libs/目录下
@@ -49,39 +37,34 @@ android {
 //        include "com/test/**/*.class"
 //        //重命名
 //        rename ('classes.jar', 'SkSDK.jar')
-//
-//        include('libs','**/*.aar')
-//        include('com.squareup.okio:okio:1.14.0')
-//        include('com.squareup.okhttp3:okhttp:3.10.0')
-//        include('com.squareup.okhttp3:logging-interceptor:3.10.0')
-//        include('com.squareup.retrofit2:retrofit:2.4.0')
-//        include('com.squareup.retrofit2:converter-gson:2.8.2')
-//        include('com.squareup.retrofit2:converter-gson:2.8.2')
-//        include('com.squareup.retrofit2:adapter-rxjava2:2.4.0')
-//        include('io.reactivex.rxjava2:rxjava:2.1.12')
-//        include('com.trello.rxlifecycle2:rxlifecycle-components:2.2.1')
-//        include('cn.finalteam:okhttpfinal:2.0.7')
-//        include('com.orhanobut:logger:2.2.0')
+//        from(project.zipTree('build/intermediates/aar_libs_directory/release/libs/acra-4.5.0.jar'))//添加classes
 //    }
-//    makeJar.dependsOn(build)
 
-//    publishNonDefault true //默认不为发布版本
+    task makeJar(type: Jar) {
+        archivesBaseName="MySdk_v1.0.0"
+        //删除存在的
+        delete 'build/libs/MySdk_v1.0.0'
+        //设置拷贝的文件
+        from(project.zipTree('build/intermediates/aar_libs_directory/release/libs/acra-4.5.0.jar'))
+//        from(project.zipTree('build/intermediates/aar_libs_directory/release/libs/logging-interceptor-3.10.0.jar'))
+        destinationDir = file('build/libs')
+    }
+    makeJar.dependsOn(build)
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    //RxJava2+Retrofit2 网络框架
-    implementation library.okio
-    implementation library.okhttp
-    implementation library.okhttp_logging
-    implementation library.retrofit2
-    implementation library.gson
-    implementation library.retrofit2_gson
-    implementation library.retrofit2_adapter
-    api library.rxjava2
-    implementation library.rxlifecycle2_components
-    /*网络*/
-    implementation 'cn.finalteam:okhttpfinal:2.0.7'
-    implementation library.logger
+//    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    implementation(name:'voiceai-release', ext:'aar')
+//    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.30'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:2.2.1"
+    implementation "com.orhanobut:logger:2.2.0"
+    implementation files('libs\\log4j-1.2.17.jar')
+    implementation files('libs\\slf4j-api-1.7.30.jar')
+    implementation files('libs\\slf4j-log4j12-1.7.30.jar')
+    api files('libs\\voicedna-sdk-1.2-SNAPSHOT.jar')
 }

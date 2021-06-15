@@ -5,7 +5,7 @@ import java.util.List;
 public class TaskResultsBean {
     /**
      * flag : 0
-     * description : 未匹配到声纹
+     * description : 验证不通过
      * isRegis : false
      * regisTaskId : null
      * score : null
@@ -38,8 +38,8 @@ public class TaskResultsBean {
      */
     private String description;
     private Boolean isRegis; //是否注册入库
-    private Object regisTaskId; //注册任务ID
-    private Object score; //相似度分数,取比对项中最高值
+    private String regisTaskId; //注册任务ID
+    private double score; //相似度分数,取比对项中最高值
     private List<ExecResultsBean> execResults;
 
     public Integer getFlag() {
@@ -66,19 +66,19 @@ public class TaskResultsBean {
         isRegis = regis;
     }
 
-    public Object getRegisTaskId() {
+    public String getRegisTaskId() {
         return regisTaskId;
     }
 
-    public void setRegisTaskId(Object regisTaskId) {
+    public void setRegisTaskId(String regisTaskId) {
         this.regisTaskId = regisTaskId;
     }
 
-    public Object getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(Object score) {
+    public void setScore(double score) {
         this.score = score;
     }
 

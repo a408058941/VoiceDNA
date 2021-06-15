@@ -50,8 +50,16 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+//    implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation project(':baselibrary')
     implementation library.butterknife
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     annotationProcessor library.butterknife_compiler
+
+
+    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
+    implementation 'com.alibaba:fastjson:1.2.47'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
 }

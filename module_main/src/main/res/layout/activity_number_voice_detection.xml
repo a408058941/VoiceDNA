@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/voice_background"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_title"
+      >
+        <RelativeLayout
+            android:id="@+id/voice_title_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <ImageView
+                android:id="@+id/voice_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/voice_back"/>
+            <TextView
+                android:id="@+id/voice_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:textSize="17sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:id="@+id/voice_progress_bar_time"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:max="30"
+            android:progress="30"
+            android:progressDrawable="@drawable/voice_time_progressbar"
+            />
+        <TextView
+            android:id="@+id/voice_record_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:gravity="center"
+            android:maxWidth="224dp"
+            android:textColor="@color/text_age"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/voice_time_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10.5dp"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:gravity="center"
+            android:maxWidth="200dp"
+            android:textColor="#666666" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="58dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/voice_record_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="18.5dp"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:text="@string/voice_record_prompt1"
+                android:textSize="16sp"
+                android:textColor="#666666" />
+            <com.guiying.module.ui.activity.view.AudioRecordStepView
+                android:id="@+id/voice_record_step"
+                android:layout_width="match_parent"
+                android:layout_marginTop="22dp"
+                android:layout_height="34dp" />
+
+            <TextView
+                android:id="@+id/voice_record_deos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="18.5dp"
+                android:adjustViewBounds="true"
+                android:gravity="center"
+                android:maxWidth="224dp"
+                android:textSize="56sp"
+                android:textColor="@color/voice_black" />
+
+
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.guiying.module.ui.activity.view.AudioRecordView
+            android:id="@+id/voice__record_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:diffuse_color="@color/image_corecolor"
+            app:diffuse_coreColor="@color/image_corecolor"
+            app:diffuse_coreImage="@mipmap/button"
+            app:diffuse_coreRadius="100"
+            app:diffuse_maxWidth="300"
+            app:diffuse_speed="5"
+            app:diffuse_width="4"/>
+    </LinearLayout>
+</LinearLayout>

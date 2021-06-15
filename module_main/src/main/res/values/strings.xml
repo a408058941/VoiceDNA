@@ -1,2 +1,38 @@
 <resources>
+    <string name="voice_record_prompt">请按住按钮，贴近手机话筒，匀速说话，注意满足有效时长</string>
+    <string name="voice_record_prompt1">请按住按钮，贴近手机话筒，均速读出以下数字</string>
+    <string name="voice_record_prompt_1">长按按钮说话 </string>
+    <string name="voice_record_prompt_2">松开结束录音 </string>
+    <string name="voice_register">声纹注册</string>
+    <string name="voice_verify">声纹验证(1:1)</string>
+    <string name="voice_verify_n">声纹验证(1:N)</string>
+    <string name="base_dialog_loading">加载中...</string>
+    <string name="voice_hint">请输入用户名</string>
+    <string name="voice_app_id">请输入APP_ID</string>
+    <string name="voice_appsecret">请输入APPSECRET</string>
+    <string-array name="list_register">
+        <item>我们都知道，不同性别的人，说话的声音是不一样的。一般来说，男性的声音更深沉，女性的声音更尖细。</item>
+        <item>来自不同地域的人，可能会有一些当地特有的发音方法，即使说同一个词，也会带不同口音，可以根据口音判断对方地域。</item>
+        <item>影响声音的因素有很多，说话人的性别或年龄不同，说话的声音是不一样的，同时地域也会影响到发音的方式。</item>
+        <item>即使是从小一起长大的亲兄弟或亲姐妹，他们的声线和发音习惯，或多或少都会有不同，说话时的声音也是不同的。</item>
+        <item>每个人的发音器官，包括声带、声管等，在大小和形状上，各有差异，没有完全相同的，因此发出的声音也各不相同。</item>
+        <item>声纹就像指纹一样，有一些特有的特征存在，所以可以用于将一个人的声音，与其他人的声音区分开，进行身份验证。</item>
+        <item>基于深度学习的声纹识别技术，是目前业界最领先、最主流的技术，为声纹领域带来了重大的变革，推动声纹的发展。</item>
+        <item>未来将会有更多的公司，将声纹技术部署到他们的产品中，从而为用户提供更好、更便捷、更个性化的产品体验。</item>
+        <item>警方可以通过分析骚扰电话、勒索电话、恐吓电话中的声纹信息，排查相关的犯罪嫌疑人，进行案件的侦察工作。</item>
+        <item>无论是双胞胎兄弟姐妹，无意间被转录的音频，或者是人工合成的音频，都无法通过声纹识别的验证。</item>
+    </string-array>
+
+    <string-array name="list_verification">
+        <item>声纹技术，是音频信号处理学科的一个重要分支</item>
+        <item>智能手机、智能家电、智能音箱都可以使用声纹技术</item>
+        <item>目前的声纹技术已经十分成熟，但仍有不少挑战</item>
+        <item>声纹和指纹识别、人脸识别等，可以一起组合使用</item>
+        <item>未来，将会有更多的应用产品，结合声纹技术实现</item>
+        <item>声纹技术，可以在不同领域发挥着不同的作用</item>
+        <item>声音是一种波，可以通过空气这个介质传播</item>
+        <item>进入人耳的声音，被鼓膜获取，传递给听小骨</item>
+        <item>改变声道的形状，就能发出各种不同的声音</item>
+        <item>人们说话时，声带会振动，产生各种各样的声音</item>
+    </string-array>
 </resources>

@@ -5,7 +5,7 @@ import java.util.List;
 public class VoiceprintTaskData {
     private  String groupId;  //目标声纹分组ID
     private List<String> fileIds;// 文件ID数组
-    private  boolean vadSwicth;//质检开关,不传默认false
+    private  boolean vadSwitch;//质检开关,不传默认false
     private  Integer vadLevel; //质检值:1.宽松，3中等，5严格 若vadSwicth为true则必传该字段
     private  boolean diaSwitch; //分割开关,不传默认false
     private  Integer filterType;//分割过滤类型:-1:不过滤,0关键字过滤,1声纹过滤。    若diaSwitch为true则必传
@@ -14,17 +14,17 @@ public class VoiceprintTaskData {
     public VoiceprintTaskData() {
     }
 
-    public VoiceprintTaskData(String groupId, List<String> fileIds, boolean vadSwicth, boolean diaSwitch) {
+    public VoiceprintTaskData(String groupId, List<String> fileIds, boolean vadSwitch, boolean diaSwitch) {
         this.groupId = groupId;
         this.fileIds = fileIds;
-        this.vadSwicth = vadSwicth;
+        this.vadSwitch = vadSwitch;
         this.diaSwitch = diaSwitch;
     }
 
-    public VoiceprintTaskData(String groupId, List<String> fileIds, boolean vadSwicth, Integer vadLevel, boolean diaSwitch, Integer filterType, String voiceFilter) {
+    public VoiceprintTaskData(String groupId, List<String> fileIds, boolean vadSwitch, Integer vadLevel, boolean diaSwitch, Integer filterType, String voiceFilter) {
         this.groupId = groupId;
         this.fileIds = fileIds;
-        this.vadSwicth = vadSwicth;
+        this.vadSwitch = vadSwitch;
         this.vadLevel = vadLevel;
         this.diaSwitch = diaSwitch;
         this.filterType = filterType;
@@ -48,11 +48,11 @@ public class VoiceprintTaskData {
     }
 
     public boolean isVadSwicth() {
-        return vadSwicth;
+        return vadSwitch;
     }
 
-    public void setVadSwicth(boolean vadSwicth) {
-        this.vadSwicth = vadSwicth;
+    public void setVadSwicth(boolean vadSwitch) {
+        this.vadSwitch = vadSwitch;
     }
 
     public Integer getVadLevel() {

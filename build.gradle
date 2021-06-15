@@ -6,6 +6,7 @@ buildscript {
     addRepos(repositories)
     repositories {
         google()
+        mavenCentral()
         jcenter()
         maven { url 'https://dl.bintray.com/umsdk/release' }
     }

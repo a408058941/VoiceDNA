@@ -3,32 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.guiying.module.main">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 允许程序访问CellID或WiFi热点来获取粗略的位置 -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <application >
+    <application>
+        <activity android:name="com.guiying.module.ui.activity.main.NumberVoiceDetectionActivity"></activity>
+        <activity android:name="com.guiying.module.ui.activity.main.NumberUserNameActivity" />
+        <activity android:name="com.guiying.module.ui.activity.main.SplashActivity" />
+        <activity android:name="com.guiying.module.ui.activity.main.VoiceDetectionActivity" />
+        <activity android:name="com.guiying.module.ui.activity.main.UserNameActivity" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="11c7f690976c31d7c026b623e20e6d12" />
 
-        <activity
-            android:name="com.guiying.module.ui.activity.main.MainActivity"
-           >
+        <activity android:name="com.guiying.module.ui.activity.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +35,6 @@
                 <data android:scheme="mobclick" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

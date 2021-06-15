@@ -10,13 +10,22 @@ import com.common.voicedna.bean.VoiceprintTaskDetailBean;
 import com.common.voicedna.network.BaseBean;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 public interface DnaService {
@@ -47,7 +56,7 @@ public interface DnaService {
      * @return
      */
     @POST()
-    Observable<BaseBean<String>> group_create(@Url String Url);
+    Observable<BaseBean<GroupBean>> group_create(@Url String Url);
 
     /**
      * 查看声纹分组
@@ -93,4 +102,11 @@ public interface DnaService {
     @GET()
     Observable<BaseBean<VoiceoperateDetailBean>> VoiceoperateDetail(@Url String Url);
 
+    /**
+     * 上传文件接口
+     * @return
+     */
+
+    @POST(DnaHostUrl.UPLOAD)
+    Call<ResponseBody> postPic(@Header("x-vai-token") String token,@Header("x-use-for") int type,@Header("x-batch-id") String id,@Body RequestBody body);
 }

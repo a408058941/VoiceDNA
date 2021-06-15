@@ -1,28 +1,36 @@
 package com.guiying.module.ui.activity.main;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
+import android.Manifest;
+import android.content.Intent;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.common.voicedna.api.DnaPresenter;
-import com.common.voicedna.bean.FileBean;
-import com.common.voicedna.bean.TokenBean;
-import com.common.voicedna.bean.VoiceoperateDetailBean;
-import com.common.voicedna.bean.VoiceprintTaskDetailBean;
-import com.common.voicedna.data.AutoRegisData;
-import com.common.voicedna.network.RxCallback;
+import com.common.voicedna.Common.IdVerifier;
+import com.common.voicedna.VoiceRecognize.VoiceRegisterConfig;
+import com.common.voicedna.utils.CallBack;
 import com.common.voicedna.utils.DnaCallback;
+import com.common.voicedna.utils.EmptyUtil;
+import com.common.voicedna.utils.PermissionUtil;
 import com.common.voicedna.utils.SPManager;
-import com.common.voicedna.utils.UuidUtis;
+import com.common.voicedna.utils.SPUtil;
 import com.guiying.module.main.R;
+import com.guiying.module.ui.activity.base.BaseActivity;
+import com.guiying.module.ui.activity.base.MySPManager;
+import com.guiying.module.ui.activity.base.ViewManager;
+import com.voiceai.voicedna.bean.dto.VoicePrintGroup;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.security.Provider;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
+
+import static com.guiying.module.ui.activity.base.Constants.DNA_DIGIT_ANDROID;
 
 /**
  * <p>类说明</p>
@@ -30,122 +38,199 @@ import java.util.List;
  * @version V1.2.0
  * @name MainActivity
  */
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
+    private String appid;
+    private String appsecret;
+    private TextView tv_type;
+    private int type;
+    private long lastClickTime = 0L;
+    private static final int FAST_CLICK_DELAY_TIME = 500; // 快速点击间隔
+    private int count = 0;
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initialize();
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
-
+    @Override
     protected void initialize() {
-        DnaPresenter.getInstance().init(this, "IFCvHTsoBnP16q5noSBOjSBrMncBAF7n", "0hcVkdzbmb6Yvp6HKaVkIRMI45xP8OmX", new DnaCallback<TokenBean>() {
-            @Override
-            public void onSuccess(@Nullable TokenBean data) {
+        SPUtil.getSP(this);
+        VoiceRegisterConfig.setVerificationSpeechduration(3);
+        VoiceRegisterConfig.setRegisterSpeechDuration(8);
+        tv_type= findViewById(R.id.tv_type);
+        findViewById(R.id.test_1).setOnClickListener(this);
+        findViewById(R.id.test_2).setOnClickListener(this);
+        findViewById(R.id.test_3).setOnClickListener(this);
+        findViewById(R.id.tv_set).setOnClickListener(this);
+        findViewById(R.id.image_log).setOnClickListener(this);
+        if (EmptyUtil.isEmpty(MySPManager.getAppId())) {
+            startActivityForResult(new Intent(this, SplashActivity.class), 101);
+        } else {
+            appid = MySPManager.getAppId();
+            appsecret =MySPManager.getAppSecret();
+            type =MySPManager.getAppType();
+            initPermission();
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 101) {
+//            if (EmptyUtil.isNotEmpty(MySPManager.getAppId())) {
+            if (data == null)
+                return;
+            appid = data.getStringExtra("appid");
+            appsecret = data.getStringExtra("appsecret");
+            type = data.getIntExtra("type", 0);
+            initPermission();
+//            }
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IdVerifier.getInstance().release();
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        if (isFastClick()){
+            return;
+        }
+        if (EmptyUtil.isEmpty(appid)) {
+            startActivityForResult(new Intent(this, SplashActivity.class), 101);
+            return;
+        } else if (EmptyUtil.isEmpty(MySPManager.getUserGroupid())) {
+            startActivityForResult(new Intent(this, SplashActivity.class), 101);
+            return;
+        } else if (view.getId() == R.id.tv_set) {
+            startActivityForResult(new Intent(this, SplashActivity.class), 101);
+            return;
+        } else if (view.getId() == R.id.test_1) {
+            //注册
+            startActivity(new Intent(MainActivity.this, UserNameActivity.class).putExtra("mRecordMaxNum", 0));
+        } else if (view.getId() == R.id.test_2) {
+            //1:1
+            startActivity(new Intent(MainActivity.this, UserNameActivity.class).putExtra("mRecordMaxNum", 1));
+        } else if (view.getId() == R.id.test_3) {
+            if (MySPManager.getAppType() == 1) {
+                startActivity(new Intent(MainActivity.this, VoiceDetectionActivity.class).putExtra("mRecordMaxNum", 2));
+            } else if (MySPManager.getAppType() == 2) {
+                //1:N
+                startActivity(new Intent(MainActivity.this, NumberVoiceDetectionActivity.class).putExtra("mRecordMaxNum", 2));
             }
-
-            @Override
-            public void onError(String throwable) {
-
-            }
-        });
-        DnaPresenter.getInstance().group_create("111").safeSubscribe(new RxCallback<String>() {
-            @Override
-            public void onSuccess(@Nullable String string) {
-                Log.e("1111","11111");
-            }
-        });
-        //获取Token
-//        DnaPresenter.getInstance().getToken().safeSubscribe(new RxCallback<TokenBean>() {
-//            @Override
-//            public void onSuccess(@Nullable TokenBean data) {
-//                SPManager.setUserToken(data.getToken());
-//            }
-//
-//            @Override
-//            public void onError(Throwable t) {
-//                super.onError(t);
-//
-//            }
-//        });
-//        获取分组  1cdcb88a98d24de491028154eab57f15  111
-//        DnaPresenter.getInstance().getGroup().safeSubscribe(new RxCallback<List<GroupBean>>() {
-//            @Override
-//            public void onSuccess(@Nullable List<GroupBean> data) {
-//                Log.e("11111",data.get(0).getId()+"");
-//            }
-//        });
-//        RxPermissionsUtil.check(this, RxPermissionsUtil.CAMERA_STORAGE, "获取录音，文件读取权限", new RxPermissionsUtil.OnPermissionRequestListener() {
-//            @Override
-//            public void onSucceed() {
-
-//            }
-
-//            @Override
-//            public void onFailed() {
-//
-//            }
-//        });
-
-
-        //注册
-//        String pate =Environment.getExternalStorageDirectory().getAbsolutePath()+ "/1111111.wav";
-//        DnaPresenter.getInstance().Uploadbycode(new File(pate), 0, UuidUtis.randomUuid(), new DnaCallback<FileBean>() {
-//
-//            @Override
-//            public void onSuccess(@Nullable FileBean data) {
-//                DnaPresenter.getInstance().register("1cdcb88a98d24de491028154eab57f15", data.getFileId(), new DnaCallback<VoiceprintTaskDetailBean>() {
-//                    @Override
-//                    public void onSuccess(@Nullable VoiceprintTaskDetailBean data) {
-// Log.e("111111","111111");
-//                    }
-//
-//                    @Override
-//                    public void onError(String throwable) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onError(String throwable) {
-//
-//            }
-//
-//
-//        });
-
-//        //验证
-        String pate = Environment.getExternalStorageDirectory().getAbsolutePath() + "/1111111.wav";
-        DnaPresenter.getInstance().Uploadbycode(new File(pate), 1, UuidUtis.randomUuid(), new DnaCallback<FileBean>() {
-
-            @Override
-            public void onSuccess(@Nullable FileBean data) {
-                List<AutoRegisData> autoRegis = new ArrayList<>();
-                DnaPresenter.getInstance().Voiceoperate("1cdcb88a98d24de491028154eab57f15", data.getFileId(), 0, "", autoRegis, new DnaCallback<VoiceoperateDetailBean>() {
-                    @Override
-                    public void onSuccess(@Nullable VoiceoperateDetailBean data) {
-                        Log.e("111111", data.getTaskResults().get(0).getDescription());
+        }else if (view.getId() == R.id.image_log) {
+            if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
+                if (count >= 4) {
+                    if (MySPManager.getType()==1){
+                        tv_type.setText("VoiceDNA-test");
+                        MySPManager.setType(2);
+                    }else if (MySPManager.getType()==2){
+                        tv_type.setText("VoiceDNA");
+                        MySPManager.setType(1);
                     }
-
-                    @Override
-                    public void onError(String throwable) {
-                        Log.e("111111", throwable);
+                    if (EmptyUtil.isEmpty(appid)) {
+                        startActivityForResult(new Intent(this, SplashActivity.class), 101);
+                    } else {
+                        initPermission();
                     }
-                });
+                    count = 0;
+                } else {
+                    count++;
+                }
+            } else {
+                count = 1;
+            }
+            lastClickTime = System.currentTimeMillis();
+        }
+    }
+
+
+    /**
+     * 初始化权限
+     */
+    public void initPermission() {
+        new PermissionUtil(this).permission(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_PHONE_STATE).request(new CallBack() {
+            @Override
+            public void onSuccess() {
+                init();
             }
 
             @Override
-            public void onError(String throwable) {
-
+            public void onFail() {
+                Toast.makeText(MainActivity.this, "权限获取失败", Toast.LENGTH_SHORT).show();
             }
-
-
         });
     }
+
+
+    /**
+     * 初始化SDK
+     */
+    public void init() {
+        showProgressDialog("正在初始化");
+        IdVerifier.getInstance().init(this, appid, appsecret, new DnaCallback<Integer>() {
+            @Override
+            public void onSuccess(@Nullable Integer data) {
+                //初始化成功
+                if (data == 0) {
+                    getGroup();
+                }
+            }
+
+            @Override
+            public void onError(int code,String msg) {
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                appid="";
+                hideProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 获取分组
+     */
+    public void getGroup() {
+        IdVerifier.getInstance().getGroup(new DnaCallback<List<VoicePrintGroup>>() {
+            @Override
+            public void onSuccess(@Nullable List<VoicePrintGroup> data) {
+                if (data != null && data.size() > 0) {
+                    hideProgressDialog();
+                    MySPManager.setUserGroupid(data.get(0).getId());
+                    MySPManager.setUserGroupName(data.get(0).getGroupName());
+                    MySPManager.setAppId(appid);
+                    MySPManager.setAppSecret(appsecret);
+                    MySPManager.setAppType(type);
+                    Toast.makeText(MainActivity.this, "初始化成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    GreateGroup();
+                }
+            }
+
+            @Override
+            public void onError(int code,String msg) {
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
+            }
+        });
+    }
+    public void GreateGroup() {
+        IdVerifier.getInstance().GreateGroup("android_group", new DnaCallback<String>() {
+            @Override
+            public void onSuccess(@Nullable String data) {
+                getGroup();
+            }
+
+            @Override
+            public void onError(int code, String msg) {
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                hideProgressDialog();
+            }
+        });
+    }
+    /**
 
 
     /**
@@ -162,7 +247,8 @@ public class MainActivity extends Activity {
                 currentBackPressedTime = System.currentTimeMillis();
                 return true;
             } else {
-//                ViewManager.getInstance().exitApp(this);
+                finish();
+
             }
             return false;
 
@@ -170,11 +256,5 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        DnaPresenter.getInstance().release();
     }
 }
