@@ -5,8 +5,8 @@ ext {
 
     ver = [
             //Version
-            versionCode          : 3,
-            versionName          : "1.0.3",
+            versionCode          : 1,
+            versionName          : "1.0.0",
 
             //SDK And Tools
             minSdkVersion        : 19,

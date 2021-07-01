@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 3,
-      "versionName": "1.0.3",
-      "outputFile": "module_app-release.apk"
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "outputFile": "VoiceDNA-v1.0.0-20210628-release.apk"
     }
   ]
 }

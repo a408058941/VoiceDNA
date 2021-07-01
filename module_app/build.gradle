@@ -40,34 +40,46 @@ android {
     }
 
     buildTypes {
-//        release {
-//            //更改AndroidManifest.xml中预先定义好占位符信息
-//            //manifestPlaceholders = [app_icon: "@drawable/icon"]
-//            // 不显示Log
-//            buildConfigField "boolean", "LEO_DEBUG", "false"
-//            //是否zip对齐
-//            zipAlignEnabled true
-//            // 缩减resource文件
-//            shrinkResources false
-//            //Proguard
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            //签名
-////            signingConfig signingConfigs.release
-//        }
+        release {
+            //更改AndroidManifest.xml中预先定义好占位符信息
+            //manifestPlaceholders = [app_icon: "@drawable/icon"]
+            // 不显示Log
 
-//        debug {
-////            给applicationId添加后缀“.debug”
-////            manifestPlaceholders = [app_icon: "@drawable/launch_beta"]
-//            buildConfigField "boolean", "LOG_DEBUG", "true"
-//            zipAlignEnabled false
-//            shrinkResources false
-//            minifyEnabled false
-////            signingConfig signingConfigs.release
-//            debuggable true
-//        }
+            buildConfigField "boolean", "LEO_DEBUG", "false"
+            //是否zip对齐
+            zipAlignEnabled true
+            // 缩减resource文件
+            shrinkResources false
+            //Proguard
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders.put("appName","声纹DNA")
+            //签名
+//            signingConfig signingConfigs.release
+        }
+
+        debug {
+//            给applicationId添加后缀“.debug”
+//            manifestPlaceholders = [app_icon: "@drawable/launch_beta"]
+//            manifestPlaceholders.put("appName","声纹DNA测试版")
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            zipAlignEnabled false
+            shrinkResources false
+            minifyEnabled false
+            applicationIdSuffix ".debug"
+//            signingConfig signingConfigs.release
+            debuggable true
+        }
     }
 
+
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "VoiceDNA-v${variant.versionName}-${buildTime()}-${ variant.buildType.name}.apk"
+
+        }
+    }
 
 }
 

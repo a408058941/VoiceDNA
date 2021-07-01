@@ -6,5 +6,5 @@ public interface RecorderListener {
     void recordOfByte(byte[] data, int bufferSizeInBytes, int readsize);
     void onRecordStart(int resultCode);
     void onRecordingError(String error);
-    void onRecordStop(File b);
+    void onRecordStop(byte[] bytes);
 }

@@ -2,6 +2,7 @@ package com.guiying.module.ui.activity.main;
 
 import android.Manifest;
 import android.content.Intent;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,25 +13,18 @@ import androidx.annotation.Nullable;
 
 import com.common.voicedna.Common.IdVerifier;
 import com.common.voicedna.VoiceRecognize.VoiceRegisterConfig;
+import com.common.voicedna.bean.ServiceType;
 import com.common.voicedna.utils.CallBack;
 import com.common.voicedna.utils.DnaCallback;
 import com.common.voicedna.utils.EmptyUtil;
 import com.common.voicedna.utils.PermissionUtil;
-import com.common.voicedna.utils.SPManager;
 import com.common.voicedna.utils.SPUtil;
 import com.guiying.module.main.R;
 import com.guiying.module.ui.activity.base.BaseActivity;
 import com.guiying.module.ui.activity.base.MySPManager;
-import com.guiying.module.ui.activity.base.ViewManager;
 import com.voiceai.voicedna.bean.dto.VoicePrintGroup;
 
-import java.security.Provider;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
-
-import static com.guiying.module.ui.activity.base.Constants.DNA_DIGIT_ANDROID;
 
 /**
  * <p>类说明</p>
@@ -46,6 +40,14 @@ public class MainActivity extends BaseActivity {
     private long lastClickTime = 0L;
     private static final int FAST_CLICK_DELAY_TIME = 500; // 快速点击间隔
     private int count = 0;
+    public String HOSTTextURL = "https://test.cloudv3.voiceaitech.com";
+    public String fileTextServer = "https://test.dna.upload.voiceaitech.com";
+
+    public String HOSTFormalURL = "https://console.voiceaitech.com";
+    public String fileFormaServer = "https://dna.upload.voiceaitech.com";
+    String dnaServer;
+    String fileServer;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -54,20 +56,56 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initialize() {
         SPUtil.getSP(this);
-        VoiceRegisterConfig.setVerificationSpeechduration(3);
-        VoiceRegisterConfig.setRegisterSpeechDuration(8);
-        tv_type= findViewById(R.id.tv_type);
+        VoiceRegisterConfig.setVerifySpeechDurationStandard(3);
+        VoiceRegisterConfig.setRegisterSpeechDurationStandard(8);
+        tv_type = findViewById(R.id.tv_type);
         findViewById(R.id.test_1).setOnClickListener(this);
         findViewById(R.id.test_2).setOnClickListener(this);
         findViewById(R.id.test_3).setOnClickListener(this);
         findViewById(R.id.tv_set).setOnClickListener(this);
-        findViewById(R.id.image_log).setOnClickListener(this);
+        findViewById(R.id.image_log).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
+                    if (count >= 4) {
+                        if (MySPManager.getType() == 1) {
+                            tv_type.setText("VoiceDNA-test");
+                            MySPManager.setType(2);
+                            dnaServer = HOSTTextURL;
+                            fileServer = fileTextServer;
+                        } else if (MySPManager.getType() == 2) {
+                            tv_type.setText("VoiceDNA");
+                            MySPManager.setType(1);
+                            dnaServer = HOSTFormalURL;
+                            fileServer = fileFormaServer;
+                        }
+                        startActivityForResult(new Intent(MainActivity.this, SplashActivity.class), 101);
+                        count = 0;
+                    } else {
+                        count++;
+                    }
+                } else {
+                    count = 1;
+                }
+                lastClickTime = System.currentTimeMillis();
+            }
+        });
+        if (MySPManager.getType() == 2) {
+            tv_type.setText("VoiceDNA-test");
+            dnaServer = HOSTTextURL;
+            fileServer = fileTextServer;
+        } else if (MySPManager.getType() == 1) {
+            tv_type.setText("VoiceDNA");
+            dnaServer = HOSTFormalURL;
+            fileServer = fileFormaServer;
+        }
+
         if (EmptyUtil.isEmpty(MySPManager.getAppId())) {
             startActivityForResult(new Intent(this, SplashActivity.class), 101);
         } else {
             appid = MySPManager.getAppId();
-            appsecret =MySPManager.getAppSecret();
-            type =MySPManager.getAppType();
+            appsecret = MySPManager.getAppSecret();
+            type = MySPManager.getAppType();
             initPermission();
         }
     }
@@ -96,7 +134,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        if (isFastClick()){
+        if (isFastClick()) {
             return;
         }
         if (EmptyUtil.isEmpty(appid)) {
@@ -121,29 +159,8 @@ public class MainActivity extends BaseActivity {
                 //1:N
                 startActivity(new Intent(MainActivity.this, NumberVoiceDetectionActivity.class).putExtra("mRecordMaxNum", 2));
             }
-        }else if (view.getId() == R.id.image_log) {
-            if (System.currentTimeMillis() - lastClickTime < FAST_CLICK_DELAY_TIME) {
-                if (count >= 4) {
-                    if (MySPManager.getType()==1){
-                        tv_type.setText("VoiceDNA-test");
-                        MySPManager.setType(2);
-                    }else if (MySPManager.getType()==2){
-                        tv_type.setText("VoiceDNA");
-                        MySPManager.setType(1);
-                    }
-                    if (EmptyUtil.isEmpty(appid)) {
-                        startActivityForResult(new Intent(this, SplashActivity.class), 101);
-                    } else {
-                        initPermission();
-                    }
-                    count = 0;
-                } else {
-                    count++;
-                }
-            } else {
-                count = 1;
-            }
-            lastClickTime = System.currentTimeMillis();
+        } else if (view.getId() == R.id.image_log) {
+
         }
     }
 
@@ -171,7 +188,8 @@ public class MainActivity extends BaseActivity {
      */
     public void init() {
         showProgressDialog("正在初始化");
-        IdVerifier.getInstance().init(this, appid, appsecret, new DnaCallback<Integer>() {
+        ServiceType serviceId = type == 1 ? ServiceType.TEXT : ServiceType.NUMBER;
+        IdVerifier.getInstance().init(this, appid, appsecret, serviceId, dnaServer, fileServer, new DnaCallback<Integer>() {
             @Override
             public void onSuccess(@Nullable Integer data) {
                 //初始化成功
@@ -181,9 +199,9 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onError(int code,String msg) {
+            public void onError(int code, String msg) {
                 Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                appid="";
+                appid = "";
                 hideProgressDialog();
             }
         });
@@ -204,18 +222,19 @@ public class MainActivity extends BaseActivity {
                     MySPManager.setAppSecret(appsecret);
                     MySPManager.setAppType(type);
                     Toast.makeText(MainActivity.this, "初始化成功", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     GreateGroup();
                 }
             }
 
             @Override
-            public void onError(int code,String msg) {
+            public void onError(int code, String msg) {
                 Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 hideProgressDialog();
             }
         });
     }
+
     public void GreateGroup() {
         IdVerifier.getInstance().GreateGroup("android_group", new DnaCallback<String>() {
             @Override
@@ -229,8 +248,8 @@ public class MainActivity extends BaseActivity {
                 hideProgressDialog();
             }
         });
+
     }
-    /**
 
 
     /**

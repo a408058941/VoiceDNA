@@ -4,11 +4,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -42,7 +46,7 @@ import static com.guiying.module.ui.activity.base.Constants.DNA_DIGIT_ANDROID;
 public class SplashActivity extends BaseActivity {
     private EditText MEdAppid;
     private EditText MEdAppsecret;
-    private RadioGroup radio;
+    private RadioGroup radio,radio1,radio2;
     private RadioButton radioButton1;
     private RadioButton radioButton2;
     private ImageView voice_toolbar;
@@ -60,23 +64,28 @@ public class SplashActivity extends BaseActivity {
     protected void initialize() {
         MEdAppid = findViewById(R.id.ed_appid);
         MEdAppsecret = findViewById(R.id.ed_appsecret);
-//        MEdAppid.setText("qcJBCiBVKNPCK5zZ9speshM3FnjFFrtQ");
-//        MEdAppsecret.setText("dRuvIImmvQnvu5EvRlTNcsMqBJKfgnsI");
+
         findViewById(R.id.test_1).setOnClickListener(this);
         radio = findViewById(R.id.radio);
         radioButton1 = findViewById(R.id.radioButton);
         radioButton2 = findViewById(R.id.radioButton1);
-        voice_toolbar= findViewById(R.id.voice_toolbar);
-
+        voice_toolbar = findViewById(R.id.voice_toolbar);
+        radio1= findViewById(R.id.radio1);
+        radio2= findViewById(R.id.radio2);
         voice_toolbar.setOnClickListener(this);
-        Jump=getIntent().getIntExtra("Jump",0);
-        if (EmptyUtil.isEmpty(MySPManager.getAppId())){
+        Jump = getIntent().getIntExtra("Jump", 0);
+        if (EmptyUtil.isEmpty(MySPManager.getAppId())) {
             voice_toolbar.setVisibility(View.GONE);
         }
 
-        if (!EmptyUtil.isEmpty(MySPManager.getAppId())){
+        if (!EmptyUtil.isEmpty(MySPManager.getAppId())) {
             appid = MySPManager.getAppId();
-            appsecret =MySPManager.getAppSecret();
+            appsecret = MySPManager.getAppSecret();
+        } else {
+            if (isDebugVersion(this)){
+                MEdAppid.setText("qcJBCiBVKNPCK5zZ9speshM3FnjFFrtQ");
+                MEdAppsecret.setText("dRuvIImmvQnvu5EvRlTNcsMqBJKfgnsI");
+            }
         }
 
         radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -85,15 +94,29 @@ public class SplashActivity extends BaseActivity {
                 if (checkId == R.id.radioButton) {
                     //自由文本
                     type = 1;
-                    MEdAppid.setText("qcJBCiBVKNPCK5zZ9speshM3FnjFFrtQ");
-                    MEdAppsecret.setText("dRuvIImmvQnvu5EvRlTNcsMqBJKfgnsI");
+                    if (isDebugVersion(SplashActivity.this)){
+                        if (MySPManager.getType() == 1) {
+                            MEdAppid.setText("aKis0rt0mZFeJzTXguEaivrY5eY2umAD");
+                            MEdAppsecret.setText("KBCqHrI1bltUj50hwhFyCmCwwhRRrwUS");
+                        } else if (MySPManager.getType() == 2) {
+                            MEdAppid.setText("qcJBCiBVKNPCK5zZ9speshM3FnjFFrtQ");
+                            MEdAppsecret.setText("dRuvIImmvQnvu5EvRlTNcsMqBJKfgnsI");
+                        }
+                    }
                 } else if (checkId == R.id.radioButton1) {
                     //随机数字
                     type = 2;
-                    MEdAppid.setText("oXypEIjRbQoecpWS3h8jJS6JMz4sJDKN");
-                    MEdAppsecret.setText("ry1caLXynY2NaGDHfevA2OnnkEzBQxD9");
-//                    MEdAppid.setText("bL7K55U7WW3VygTtz7c0pToPV0yEPfHo");
-//                    MEdAppsecret.setText("UYI1njRCZVXdlR2QTVAp5XMHKUnNdnWO");
+                    if (isDebugVersion(SplashActivity.this)){
+                        if (MySPManager.getType() == 1) {
+                            MEdAppid.setText("Oxh7jVdYNA4k6BXdS33bzTOvdyM59A7i");
+                            MEdAppsecret.setText("gdNAGoHZZVp4dhIHKgOrpnGF64fwQqNw");
+
+                        } else if (MySPManager.getType() == 2) {
+
+                            MEdAppid.setText("oXypEIjRbQoecpWS3h8jJS6JMz4sJDKN");
+                            MEdAppsecret.setText("ry1caLXynY2NaGDHfevA2OnnkEzBQxD9");
+                        }
+                    }
                 }
             }
         });
@@ -107,8 +130,6 @@ public class SplashActivity extends BaseActivity {
                 radioButton2.setChecked(true);
             }
         }
-
-//        VoiceRegisterConfig.getVerificationVadsnr();
     }
 
     @Override
@@ -122,18 +143,25 @@ public class SplashActivity extends BaseActivity {
                 Toast.makeText(SplashActivity.this, "请输入Appsecret", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            Intent intent=new Intent();
-            intent.putExtra("appid",MEdAppid.getText().toString());
-            intent.putExtra("appsecret",MEdAppsecret.getText().toString());
-            intent.putExtra("type",type);
-            setResult(RESULT_OK,intent);
+            Intent intent = new Intent();
+            intent.putExtra("appid", MEdAppid.getText().toString());
+            intent.putExtra("appsecret", MEdAppsecret.getText().toString());
+            intent.putExtra("type", type);
+            setResult(RESULT_OK, intent);
             finish();
-        }if (view.getId() == R.id.voice_toolbar) {
+        }else
+        if (view.getId() == R.id.voice_toolbar) {
             finish();
         }
     }
-
-
+    public static boolean isDebugVersion(Context context) {
+        try {
+            ApplicationInfo info = context.getApplicationInfo();
+            return (info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }

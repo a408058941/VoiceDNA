@@ -76,14 +76,18 @@ public class VerificationSuccessPopup extends PopupWindow implements View.OnClic
         myRecyclerView.setLayoutManager(manager);
         myRecyclerView.setAdapter(adapter);
         if (MySPManager.getAppType()==1){
-            if (type==0){
+            if (type == 0) {
                 tv_title.setText("验证通过");
-            }else {
-                tv_title.setText("验证失败");
+            } else if (type == 1) {
+                tv_title.setText("验证不通过");
+            } else if (type == 2) {
+                tv_title.setText("匹配到声纹");
+            } else if (type == 3) {
+                tv_title.setText("未匹配到声纹");
             }
         }else  if (MySPManager.getAppType()==2){
             if (type==1){
-                tv_title.setText("匹配失败");
+                tv_title.setText("未匹配到声纹");
             }
 
         }

@@ -66,47 +66,47 @@ public class DnaPresenter extends BasePresenter {
     }
 
 
-    /**
-     * 上传图片
-     *
-     * @param bytes 音频流
-     * @param type  音频用途 0注册,1验证比对
-     * @param id    批量会话ID,需生成UUID格式（具体作用看接口描述）,格式为:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-     */
-    public void Uploadbycode(String mUserName, byte[] bytes, int type, String id, DnaCallback dnaCallback) {
-        long byteRate = 16 * 16000 * 1 / 8;
-        byte[] wavHead = PcmToWav.getWavHeader(bytes.length, bytes.length + 36, 16000, 1, byteRate);
-        byte[] bt3 = byteMerger(wavHead, bytes);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), bt3);
-        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", mUserName + ".wav", requestBody).build();
-        Request request = new Request.Builder()
-                .addHeader(SPManager.getUserTokenKey(), SPManager.getUserToken())
-                .addHeader("x-use-for", type + "")
-                .addHeader("x-batch-id", id)
-                .url(DnaHostUrl.UPLOAD)
-                .post(body)
-                .build();
-        RetrofitClient.getOkHttpClient().newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-//                dnaCallback.onError("上传失败");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                BaseBean baseBean = new Gson().fromJson(response.body().string(), BaseBean.class);
-                if (baseBean.code == 0) {
-                    String json = new Gson().toJson(baseBean.getData());
-                    FileBean fileBean = new Gson().fromJson(json, FileBean.class);
-                    dnaCallback.onSuccess(fileBean);
-                } else {
-//                    dnaCallback.onError(baseBean.getMsg());
-                }
-
-            }
-        });
-
-    }
+//    /**
+//     * 上传图片
+//     *
+//     * @param bytes 音频流
+//     * @param type  音频用途 0注册,1验证比对
+//     * @param id    批量会话ID,需生成UUID格式（具体作用看接口描述）,格式为:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+//     */
+//    public void Uploadbycode(String mUserName, byte[] bytes, int type, String id, DnaCallback dnaCallback) {
+//        long byteRate = 16 * 16000 * 1 / 8;
+//        byte[] wavHead = PcmToWav.getWavHeader(bytes.length, bytes.length + 36, 16000, 1, byteRate);
+//        byte[] bt3 = byteMerger(wavHead, bytes);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), bt3);
+//        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", mUserName + ".wav", requestBody).build();
+//        Request request = new Request.Builder()
+//                .addHeader(SPManager.getUserTokenKey(), SPManager.getUserToken())
+//                .addHeader("x-use-for", type + "")
+//                .addHeader("x-batch-id", id)
+//                .url(DnaHostUrl.UPLOAD)
+//                .post(body)
+//                .build();
+//        RetrofitClient.getOkHttpClient().newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+////                dnaCallback.onError("上传失败");
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                BaseBean baseBean = new Gson().fromJson(response.body().string(), BaseBean.class);
+//                if (baseBean.code == 0) {
+//                    String json = new Gson().toJson(baseBean.getData());
+//                    FileBean fileBean = new Gson().fromJson(json, FileBean.class);
+//                    dnaCallback.onSuccess(fileBean);
+//                } else {
+////                    dnaCallback.onError(baseBean.getMsg());
+//                }
+//
+//            }
+//        });
+//
+//    }
 
     //System.arraycopy()方法
     public static byte[] byteMerger(byte[] bt1, byte[] bt2) {

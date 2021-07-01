@@ -41,9 +41,9 @@ android {
 //    }
 
     task makeJar(type: Jar) {
-        archivesBaseName="MySdk_v1.0.0"
+        archivesBaseName="voicedna-sdk-1.0.0"
         //删除存在的
-        delete 'build/libs/MySdk_v1.0.0'
+        delete 'build/libs/voicedna-sdk-1.0.0'
         //设置拷贝的文件
         from(project.zipTree('build/intermediates/aar_libs_directory/release/libs/acra-4.5.0.jar'))
 //        from(project.zipTree('build/intermediates/aar_libs_directory/release/libs/logging-interceptor-3.10.0.jar'))
@@ -60,11 +60,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
     implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
     implementation "com.trello.rxlifecycle2:rxlifecycle-components:2.2.1"
     implementation "com.orhanobut:logger:2.2.0"
     implementation files('libs\\log4j-1.2.17.jar')
     implementation files('libs\\slf4j-api-1.7.30.jar')
     implementation files('libs\\slf4j-log4j12-1.7.30.jar')
-    api files('libs\\voicedna-sdk-1.2-SNAPSHOT.jar')
+    api files('libs\\voicedna-sdk-1.2.5-SNAPSHOT.jar')
 }

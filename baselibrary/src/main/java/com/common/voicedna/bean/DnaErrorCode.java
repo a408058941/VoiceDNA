@@ -1,7 +1,6 @@
 package com.common.voicedna.bean;
 
 
-import com.voiceai.voicedna.constant.ErrorCode;
 
 public enum DnaErrorCode {
 

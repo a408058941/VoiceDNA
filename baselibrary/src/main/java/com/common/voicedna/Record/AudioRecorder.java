@@ -52,14 +52,14 @@ public class AudioRecorder {
      *
      * @return
      */
-    public int startRecorder(Context context,String mUserName) {
+    public int startRecorder(Context context) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     if (status != Status.STATUS_START) {
                         try {
-                            if (audioRecord==null){
+                            if (audioRecord == null) {
                                 initRecorder();
                             }
                             audioRecord.startRecording();
@@ -71,7 +71,7 @@ public class AudioRecorder {
                         }
                         status = Status.STATUS_START;
 
-                        writeDataTOFile(context,mUserName);
+                        writeDataTOFile(context);
                     }
 
                 } catch (Exception ex) {
@@ -88,7 +88,7 @@ public class AudioRecorder {
     private String currentFileName;
     private String fileName;
 
-    private void writeDataTOFile(Context context,String mUserName) {
+    private void writeDataTOFile(Context context) {
         int offset = 0;
         FileOutputStream fos = null;
         try {
@@ -155,26 +155,15 @@ public class AudioRecorder {
             if (file != null) {
                 if (listener != null) {
                     byte[] b = PcmToWav.toByteArray(file);
-                   if ( EmptyUtil.isEmpty(mUserName)){
-                       mUserName=System.currentTimeMillis()+"";
-                   }
-                    PcmToWav. saveAudioDataToFile(context, b,mUserName , new PCM2WAVListener() {
+                    AppExecutors.getInstance().mainThread().execute(new Runnable() {
                         @Override
-                        public void finalResult(int resultCode,File f) {
-                            if (status == Status.STATUS_STOP) {
-                                if (resultCode==ErrorCode.SUCCESS){
-                                    AppExecutors.getInstance().mainThread().execute(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            listener.onRecordStop(f);
-                                        }
-                                    });
-
-                                }
-                            }
-                            PcmToWav.deleteFile(file);
+                        public void run() {
+                            byte[] wavHead = PcmToWav.readAllbyte(b);
+                            listener.onRecordStop( wavHead);
                         }
                     });
+                    PcmToWav.deleteFile(file);
+
                 }
             }
         } catch (

@@ -152,7 +152,7 @@ public class VoiceDetectionActivity extends BaseActivity implements VerifyListen
             if (mAudioRecordView != null) {
                 mAudioRecordView.start();
                 mAudioRecordView.setPromptMsg(R.string.voice_record_prompt_2);
-                AudioRecorder.getInstance().startRecorder(VoiceDetectionActivity.this, mUserName);
+                AudioRecorder.getInstance().startRecorder(VoiceDetectionActivity.this);
                 countDownTimer.start();
             }
         }
@@ -243,23 +243,23 @@ public class VoiceDetectionActivity extends BaseActivity implements VerifyListen
         }
 
         @Override
-        public void onRecordStop(File b) {
+        public void onRecordStop( byte[] bytes) {
             //录音结束
             handler.sendEmptyMessage(1);
             if (mRecordMaxNum == 0) {
-                register(b);
+                register(bytes);
             } else if (mRecordMaxNum == 1) {
-                Voiceoperate(b);
+                Voiceoperate(bytes);
             } else if (mRecordMaxNum == 2) {
-                Voiceoperate_N(b);
+                Voiceoperate_N(bytes);
             }
 
         }
 
     };
 
-    public void register(File b) {
-        IdVerifier.getInstance().register(MySPManager.getUserGroupName(), b, new DnaCallback<RegisTaskDetail>() {
+    public void register( byte[] bytes) {
+        IdVerifier.getInstance().register(MySPManager.getUserGroupName(), bytes,mUserName, new DnaCallback<RegisTaskDetail>() {
             @Override
             public void onSuccess(@Nullable RegisTaskDetail data) {
                 MySPManager.setUserName(mUserName);
@@ -287,21 +287,17 @@ public class VoiceDetectionActivity extends BaseActivity implements VerifyListen
      *
      * @param b
      */
-    public void Voiceoperate(File b) {
+    public void Voiceoperate(byte[] b) {
         if (TextUtils.isEmpty(mUserName)) {
             hideProgressDialog();
             return;
         }
-        List<AutoRegisData> autoRegis = new ArrayList<>();
-        IdVerifier.getInstance().Voiceoperate(MySPManager.getUserGroupName(), b, mUserName, autoRegis, new DnaCallback<IdnTaskDetail>() {
+
+        IdVerifier.getInstance().identify(MySPManager.getUserGroupName(), b, mUserName, new DnaCallback<IdnTaskDetail>() {
             @Override
             public void onSuccess(@Nullable IdnTaskDetail data) {
                 hideProgressDialog();
                 if (data.getTaskResults().get(0).getExecResults().size() > 0) {
-//                    mTextResult.setText(data.getTaskResults().get(0).getDescription() + "\n");
-//                    for (int i = 0; i < data.getTaskResults().size(); i++) {
-//                        mTextResult.append(data.getTaskResults().get(0).getExecResults().get(i).getTargetUser() + ":" + data.getTaskResults().get(0).getExecResults().get(i).getScore() + "\n");
-//                    }
                     VerificationSuccessPopup choiceAreaPop = new VerificationSuccessPopup(VoiceDetectionActivity.this);
                     choiceAreaPop.showAtLocation(mAudioRecordView, Gravity.CENTER, 0, 0);
                     choiceAreaPop.setData(data.getTaskResults().get(0).getExecResults());
@@ -338,14 +334,14 @@ public class VoiceDetectionActivity extends BaseActivity implements VerifyListen
      *
      * @param b
      */
-    public void Voiceoperate_N(File b) {
-        List<AutoRegisData> autoRegis = new ArrayList<>();
-        IdVerifier.getInstance().Voiceoperate(MySPManager.getUserGroupName(), b, "", autoRegis, new DnaCallback<IdnTaskDetail>() {
+    public void Voiceoperate_N(byte[] b) {
+
+        IdVerifier.getInstance().identify(MySPManager.getUserGroupName(), b, "", new DnaCallback<IdnTaskDetail>() {
             @Override
             public void onSuccess(@Nullable IdnTaskDetail data) {
                 hideProgressDialog();
                 if (data.getTaskResults().get(0).getExecResults().size() > 0) {
-                    VerificationSuccessPopup choiceAreaPop = new VerificationSuccessPopup(VoiceDetectionActivity.this);
+                    VerificationSuccessPopup choiceAreaPop = new VerificationSuccessPopup(VoiceDetectionActivity.this,2);
                     choiceAreaPop.showAtLocation(mAudioRecordView, Gravity.CENTER, 0, 0);
                     choiceAreaPop.setData(data.getTaskResults().get(0).getExecResults());
                     choiceAreaPop.setOnConfirm(new VerificationSuccessPopup.OnConfirm() {
@@ -355,7 +351,7 @@ public class VoiceDetectionActivity extends BaseActivity implements VerifyListen
                         }
                     });
                 } else {
-                    VerificationSuccessPopup choiceAreaPop = new VerificationSuccessPopup(VoiceDetectionActivity.this,1);
+                    VerificationSuccessPopup choiceAreaPop = new VerificationSuccessPopup(VoiceDetectionActivity.this,3);
                     choiceAreaPop.showAtLocation(mAudioRecordView, Gravity.CENTER, 0, 0);
                     choiceAreaPop.setOnConfirm(new VerificationSuccessPopup.OnConfirm() {
                         @Override

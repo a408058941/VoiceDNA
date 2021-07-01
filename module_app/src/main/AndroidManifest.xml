@@ -37,7 +37,7 @@
         android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/vehicle_vrr"
-        android:label="声纹DNA"
+        android:label="VoiceDNA"
 
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar"

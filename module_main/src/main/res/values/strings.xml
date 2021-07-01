@@ -1,6 +1,6 @@
 <resources>
     <string name="voice_record_prompt">请按住按钮，贴近手机话筒，匀速说话，注意满足有效时长</string>
-    <string name="voice_record_prompt1">请按住按钮，贴近手机话筒，均速读出以下数字</string>
+    <string name="voice_record_prompt1">请按住按钮，贴近手机话筒，均速读出以下内容</string>
     <string name="voice_record_prompt_1">长按按钮说话 </string>
     <string name="voice_record_prompt_2">松开结束录音 </string>
     <string name="voice_register">声纹注册</string>
@@ -8,7 +8,7 @@
     <string name="voice_verify_n">声纹验证(1:N)</string>
     <string name="base_dialog_loading">加载中...</string>
     <string name="voice_hint">请输入用户名</string>
-    <string name="voice_app_id">请输入APP_ID</string>
+    <string name="voice_app_id">请输入APPID</string>
     <string name="voice_appsecret">请输入APPSECRET</string>
     <string-array name="list_register">
         <item>我们都知道，不同性别的人，说话的声音是不一样的。一般来说，男性的声音更深沉，女性的声音更尖细。</item>

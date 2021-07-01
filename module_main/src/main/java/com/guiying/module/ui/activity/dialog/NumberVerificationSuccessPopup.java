@@ -90,14 +90,14 @@ public class NumberVerificationSuccessPopup extends PopupWindow implements View.
             if (type==0){
                 tv_title.setText("验证通过");
             }else {
-                tv_title.setText("验证失败");
+                tv_title.setText("验证不通过");
             }
         }else  if (MySPManager.getAppType()==2){
             if (type==1){
                 if (EmptyUtil.isEmpty(name)){
-                    tv_title.setText("匹配失败");
+                    tv_title.setText("未匹配到声纹");
                 }else {
-                    tv_title.setText("验证失败");
+                    tv_title.setText("验证不通过");
                 }
             }else {
                 if (EmptyUtil.isEmpty(name)){

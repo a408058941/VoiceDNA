@@ -23,9 +23,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:padding="10dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:padding="10dp"
                 android:src="@mipmap/voice_back"
                 android:visibility="visible" />
 
@@ -52,9 +52,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="32dp"
-            android:textSize="16sp"
+            android:text="模式"
             android:textColor="@color/voice_black"
-            android:text="模式" />
+            android:textSize="16sp" />
 
         <RadioGroup
             android:id="@+id/radio"
@@ -66,8 +66,8 @@
                 android:id="@+id/radioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:layout_marginLeft="24dp"
+                android:checked="true"
                 android:text="自由文本"
                 android:textColor="#232323" />
 
@@ -87,14 +87,13 @@
         android:layout_height="48dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="27dp"
-        android:textSize="14sp"
         android:layout_marginRight="32dp"
         android:background="@drawable/bg_shape_white"
         android:hint="@string/voice_app_id"
         android:paddingLeft="10dp"
-        android:text="IFCvHTsoBnP16q5noSBOjSBrMncBAF7n"
         android:textColor="@color/voice_title_background"
-        android:textColorHint="@color/voice_title_background" />
+        android:textColorHint="@color/voice_title_background"
+        android:textSize="14sp" />
 
     <EditText
         android:id="@+id/ed_appsecret"
@@ -102,26 +101,183 @@
         android:layout_height="48dp"
         android:layout_marginLeft="32dp"
         android:layout_marginTop="12dp"
-        android:textSize="14sp"
         android:layout_marginRight="32dp"
         android:background="@drawable/bg_shape_white"
         android:hint="@string/voice_appsecret"
         android:paddingLeft="10dp"
-        android:text="0hcVkdzbmb6Yvp6HKaVkIRMI45xP8OmX"
         android:textColor="@color/voice_title_background"
-        android:textColorHint="@color/voice_title_background" />
+        android:textColorHint="@color/voice_title_background"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/test_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:layout_marginLeft="32dp"
+        android:layout_marginTop="24dp"
         android:layout_marginRight="32dp"
         android:background="@drawable/bg_shape_blue"
         android:text="确定"
         android:textColor="@color/white"
         android:textSize="30dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:text="注册" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/ch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="质检开关"
+            android:textColor="@color/text_black" />
+
+        <CheckBox
+            android:id="@+id/ch2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="活检开关"
+            android:textColor="@color/text_black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="质检等级"
+            android:textColor="@color/voice_black"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radio1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:checked="true"
+                android:text="低"
+                android:textColor="#232323" />
+
+            <RadioButton
+                android:id="@+id/radioButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:text="中"
+                android:textColor="#232323" />
+
+            <RadioButton
+                android:id="@+id/radioButton5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:text="高"
+                android:textColor="#232323" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:text="验证" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/ch3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="质检开关"
+            android:textColor="@color/text_black" />
+
+        <CheckBox
+            android:id="@+id/ch4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="活检开关"
+            android:textColor="@color/text_black" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="质检等级"
+            android:textColor="@color/voice_black"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radio2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:checked="true"
+                android:text="低"
+                android:textColor="#232323" />
+
+            <RadioButton
+                android:id="@+id/radioButton7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:text="中"
+                android:textColor="#232323" />
+
+            <RadioButton
+                android:id="@+id/radioButton8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="42dp"
+                android:text="高"
+                android:textColor="#232323" />
+        </RadioGroup>
+    </LinearLayout>
 </LinearLayout>

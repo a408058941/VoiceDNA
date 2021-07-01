@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -129,7 +130,7 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
             }
 
             @Override
-            public void onError(int code,String msg) {
+            public void onError(int code, String msg) {
                 Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -184,8 +185,10 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
             }
 
             @Override
-            public void onError(int code,String msg) {
-                Toast.makeText(NumberVoiceDetectionActivity.this,msg,Toast.LENGTH_LONG).show();
+            public void onError(int code, String msg) {
+                Toast toast = Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM, 0, 550);
+                toast.show();
                 finish();
             }
         });
@@ -199,7 +202,7 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
                 mAudioRecordView.start();
                 mAudioRecordView.setPromptMsg(R.string.voice_record_prompt_2);
                 countDownTimer.start();
-                AudioRecorder.getInstance().startRecorder(NumberVoiceDetectionActivity.this, "");
+                AudioRecorder.getInstance().startRecorder(NumberVoiceDetectionActivity.this);
             }
         }
 
@@ -301,11 +304,11 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
         }
 
         @Override
-        public void onRecordStop(File b) {
+        public void onRecordStop(byte[] bytes) {
             //录音结束
             showProgressDialog();
             if (mRecordMaxNum == 0) {
-                IdVerifier.getInstance().submitDynamicNumberRegisTask(taskId, b, number.get(0).getNumberId(), new DnaCallback<DynamicNumerRegisTaskFileResult>() {
+                IdVerifier.getInstance().submitDynamicNumberRegisTask(taskId, bytes, number.get(0).getNumberId(), new DnaCallback<DynamicNumerRegisTaskFileResult>() {
                     @Override
                     public void onSuccess(@Nullable DynamicNumerRegisTaskFileResult data) {
                         step++;
@@ -323,12 +326,14 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
                     }
 
                     @Override
-                    public void onError(int code,String msg) {
-                        Toast.makeText(NumberVoiceDetectionActivity.this,msg, Toast.LENGTH_LONG).show();
+                    public void onError(int code, String msg) {
+                        Toast toast = Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.BOTTOM, 0, 550);
+                        toast.show();
 //                        mTextResult.setText(  ErrorCode.getErrorCodeByCode(code).getMsg());
                         getDynamicNumber();
                         hideProgressDialog();
-                        if (code==-5029){
+                        if (code == -5029) {
                             finish();
                         }
 
@@ -336,7 +341,7 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
                 });
 
             } else {
-                Voiceoperate(b);
+                Voiceoperate(bytes);
             }
 
         }
@@ -364,8 +369,10 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
             }
 
             @Override
-            public void onError(int code,String msg) {
-                Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG).show();
+            public void onError(int code, String msg) {
+                Toast toast = Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM, 0, 550);
+                toast.show();
                 finish();
             }
         });
@@ -374,16 +381,18 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
     /**
      * 1:1 验证 or 1:N
      */
-    public void Voiceoperate(File file) {
+    public void Voiceoperate( byte[] bytes) {
         if (number.size() == 0)
             return;
-        IdVerifier.getInstance().dynamicNumberIdentity(number.get(0).getNumberId(), file, MySPManager.getUserGroupName(), mUserName, new DnaCallback<DynamicNumerIdnTaskResult>() {
+//        float Asv = (float)VoiceRegisterConfig.getVerificationAsv();
+//        float Asv1 =  (float)VoiceRegisterConfig.getVerificationAsv1N();
+        IdVerifier.getInstance().dynamicNumberIdentity(number.get(0).getNumberId(), bytes, MySPManager.getUserGroupName(), mUserName, new DnaCallback<DynamicNumerIdnTaskResult>() {
             @Override
             public void onSuccess(@Nullable DynamicNumerIdnTaskResult data) {
                 hideProgressDialog();
                 getDynamicNumber();
                 if (data.getExecResults() != null && data.getExecResults().size() > 0) {
-                    NumberVerificationSuccessPopup choiceAreaPop = new NumberVerificationSuccessPopup(NumberVoiceDetectionActivity.this,0,mUserName);
+                    NumberVerificationSuccessPopup choiceAreaPop = new NumberVerificationSuccessPopup(NumberVoiceDetectionActivity.this, 0, mUserName);
                     choiceAreaPop.showAtLocation(mAudioRecordView, Gravity.CENTER, 0, 0);
                     choiceAreaPop.setData(data.getExecResults());
                     choiceAreaPop.setOnConfirm(new NumberVerificationSuccessPopup.OnConfirm() {
@@ -393,7 +402,7 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
                         }
                     });
                 } else {
-                    NumberVerificationSuccessPopup choiceAreaPop = new NumberVerificationSuccessPopup(NumberVoiceDetectionActivity.this,1,mUserName);
+                    NumberVerificationSuccessPopup choiceAreaPop = new NumberVerificationSuccessPopup(NumberVoiceDetectionActivity.this, 1, mUserName);
                     choiceAreaPop.showAtLocation(mAudioRecordView, Gravity.CENTER, 0, 0);
                     choiceAreaPop.setOnConfirm(new NumberVerificationSuccessPopup.OnConfirm() {
                         @Override
@@ -405,9 +414,11 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
             }
 
             @Override
-            public void onError(int code,String msg) {
+            public void onError(int code, String msg) {
                 hideProgressDialog();
-                Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG).show();
+                Toast toast = Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.BOTTOM, 0, 550);
+                toast.show();
                 getDynamicNumber();
             }
         });
@@ -415,10 +426,12 @@ public class NumberVoiceDetectionActivity extends BaseActivity implements Verify
 
 
     @Override
-    public boolean onAudioDetection(int var1, QualityCheckInfo inio, AsvSpoofDetectOutputData asvSpoofDetectOutput, String mgs) {
+    public boolean onAudioDetection(int var1, QualityCheckInfo inio, AsvSpoofDetectOutputData asvSpoofDetectOutput, String msg) {
         if (var1 != 0) {
             hideProgressDialog();
-            Toast.makeText(NumberVoiceDetectionActivity.this, mgs, Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(NumberVoiceDetectionActivity.this, msg, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.BOTTOM, 0, 550);
+            toast.show();
         }
         return false;
     }

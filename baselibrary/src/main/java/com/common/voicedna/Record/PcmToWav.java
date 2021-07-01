@@ -31,19 +31,20 @@ public class PcmToWav {
             }
         }
     }
+
     public static void saveAudioDataToFile(Context context, byte[] audioData, String outFilename, PCM2WAVListener listener) {
         int channels = 1;
         FileOutputStream fos = null;
         InputStream is = null;
         File filePath = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS);
         String currentFileName = filePath.getAbsolutePath();
-        String wavRootDir =currentFileName + "/VoiceKWS";
+        String wavRootDir = currentFileName + "/VoiceKWS";
         File wavFile = new File(wavRootDir);
-        if (!wavFile.exists()){
+        if (!wavFile.exists()) {
             wavFile.mkdir();
         }
 
-        File file = new File(wavRootDir+"/"+outFilename+".wav");
+        File file = new File(wavRootDir + "/" + outFilename + ".wav");
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -52,29 +53,29 @@ public class PcmToWav {
         try {
             fos = new FileOutputStream(file);
             long byteRate = 16 * 16000 * channels / 8;
-            byte[] wavHead = getWavHeader(audioData.length, audioData.length+36,16000, channels, byteRate);
+            byte[] wavHead = getWavHeader(audioData.length, audioData.length + 36, 16000, channels, byteRate);
             fos.write(wavHead);
             is = new ByteArrayInputStream(audioData);
             byte[] buff = new byte[1024];
             int len = 0;
-            while((len=is.read(buff))!=-1){
+            while ((len = is.read(buff)) != -1) {
                 fos.write(buff, 0, len);
             }
 
-            listener.finalResult(ErrorCode.SUCCESS,file);
+            listener.finalResult(ErrorCode.SUCCESS, file);
         } catch (Exception e) {
-            listener.finalResult(ErrorCode.FAIL,null);
+            listener.finalResult(ErrorCode.FAIL, null);
         } finally {
             try {
                 if (fos != null) {
                     fos.close();
                 }
-                if(is != null){
+                if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                listener.finalResult(ErrorCode.FAIL,null);
+                listener.finalResult(ErrorCode.FAIL, null);
             }
         }
 
@@ -166,6 +167,7 @@ public class PcmToWav {
             bos.close();
         }
     }
+
     //删除文件夹及文件夹下所有文件
     public static void deleteFile(File file) {
         if (file.isDirectory()) {
@@ -179,4 +181,29 @@ public class PcmToWav {
             file.delete();
         }
     }
+
+    public static byte[] readAllbyte(byte[] bytes) {
+        long byteRate = 16 * 16000 * 1 / 8;
+        byte[] wavHead = PcmToWav.getWavHeader(bytes.length, bytes.length + 36, 16000, 1, byteRate);
+
+        byte[] allbyte = byteMergerAll(wavHead, bytes);
+        return allbyte;
+    }
+
+    private static byte[] byteMergerAll(byte[]... values) {
+        int length_byte = 0;
+        for (int i = 0; i < values.length; i++) {
+            length_byte += values[i].length;
+        }
+        byte[] all_byte = new byte[length_byte];
+        int countLength = 0;
+        for (int i = 0; i < values.length; i++) {
+            byte[] b = values[i];
+            System.arraycopy(b, 0, all_byte, countLength, b.length);
+            countLength += b.length;
+        }
+        return all_byte;
+    }
+
+
 }

@@ -5,6 +5,8 @@ import com.common.voicedna.utils.BaseSPManager;
 import com.common.voicedna.utils.SPManager;
 import com.common.voicedna.utils.SPUtil;
 
+import java.math.BigDecimal;
+
 /**
  * 注册验证配置
  */
@@ -22,6 +24,48 @@ public class VoiceRegisterConfig extends SPManager {
     private static final String REGISTER_VADCLIPPINGRATIO = "register_vadClippingRatio"; //注册截幅比（%） 默认5
     private static final String REGISTER_VOICEASV = "register_voiceAsv"; //活体检测开关 不传默认true
     private static final String REGISTER_SPOOFSCORE = "register_spoofscore"; //活体检测阈值 默认0.6
+    private static final String REGISTER_ASRSWITCH = "register_asrSwitch"; //文本检测开关
+    private static final String REGISTER_ASRTHRESHOLD = "register_asrThreshold"; //文本检测阈值:0-1.0
+    private static final String REGISTER_VPRCSWITCH = "register_vprcSwitch"; //同人检测开关
+    private static final String REGISTER_VPRCTHRSHOLD = "register_vprcThrshold"; //同人检测阈值0-100
+    //同人检测开关,不传默认true
+    public static Boolean getRegisterVprcSwitch() {
+        return (Boolean) SPUtil.get(REGISTER_VPRCSWITCH, true);
+    }
+
+
+    private static void setRegisterVprcSwitch(Boolean register_vprcSwitch) {
+        SPUtil.put(REGISTER_ASRSWITCH, register_vprcSwitch);
+    }
+
+    //同人检测阈值:0-1.0 默认0.6
+    public static float getRegisterVprcThrshold() {
+        return (float) SPUtil.get(REGISTER_VPRCTHRSHOLD, 0.6f);
+    }
+
+    private static void setRegisterVprcThrshold(float vprcThrshold) {
+        SPUtil.put(REGISTER_VPRCTHRSHOLD, vprcThrshold);
+    }
+    //文本检测开关,不传默认true
+    public static Boolean getRegisterAsrSwitch() {
+        return (Boolean) SPUtil.get(REGISTER_ASRSWITCH, true);
+    }
+
+
+    private static void setRegisterAsrSwitch(Boolean vadSwicth) {
+        SPUtil.put(REGISTER_ASRSWITCH, vadSwicth);
+    }
+
+    //文本检测阈值:0-1.0 默认0.75f
+    public static float getRegisterAsrThreshold() {
+        return (float) SPUtil.get(REGISTER_ASRTHRESHOLD, 0.75f);
+    }
+
+    public static void setRegisterAsrThreshold(float asrThreshold) {
+        SPUtil.put(REGISTER_ASRTHRESHOLD, asrThreshold);
+    }
+
+
 
     //质检开关,不传默认true
     public static Boolean getRegisterVadSwicth() {
@@ -33,12 +77,12 @@ public class VoiceRegisterConfig extends SPManager {
         SPUtil.put(REGISTER_VADSWICTH, vadSwicth);
     }
     //服务器质检开关,不传默认不传默认false
-    public static Boolean getRegisterVadSwicthService() {
+    private static Boolean getRegisterVadSwicthService() {
         return (Boolean) SPUtil.get(REGISTER_VADSWICTH_SERVICE, false);
     }
 
 
-    public static void setRegisterVadSwicthService(Boolean vadSwicth) {
+    private static void setRegisterVadSwicthService(Boolean vadSwicth) {
         SPUtil.put(REGISTER_VADSWICTH_SERVICE, vadSwicth);
     }
     //注册音量大小（dB） 默认-35
@@ -51,11 +95,11 @@ public class VoiceRegisterConfig extends SPManager {
     }
 
     //注册有效时长（秒） 默认8
-    public static int getRegisterSpeechDuration() {
+    public static int getRegisterSpeechDurationStandard() {
         return (int) SPUtil.get(REGISTER_SPEECHDURATION, 15);
     }
 
-    public static void setRegisterSpeechDuration(int Speech) {
+    public static void setRegisterSpeechDurationStandard(int Speech) {
         SPUtil.put(REGISTER_SPEECHDURATION, Speech);
     }
 
@@ -92,7 +136,7 @@ public class VoiceRegisterConfig extends SPManager {
         return (float) SPUtil.get(REGISTER_SPOOFSCORE, 0.6f);
     }
 
-    public static void setRegisterSpoofscore(Boolean voiceAsvValue) {
+    public static void setRegisterSpoofscore(float voiceAsvValue) {
         SPUtil.put(REGISTER_SPOOFSCORE, voiceAsvValue);
     }
 
@@ -101,8 +145,11 @@ public class VoiceRegisterConfig extends SPManager {
         return (Integer) SPUtil.get(REGISTER_VADLEVEL, 3);
     }
 
-    public static void setUserVadLevel(Integer vadLevel) {
-        SPUtil.put(REGISTER_VADLEVEL, vadLevel);
+    public static void setRegisterVadLevel(Integer vadLevel) {
+        if (vadLevel!=1|vadLevel!=3|vadLevel!=5){
+            SPUtil.put(REGISTER_VADLEVEL, vadLevel);
+        }
+
     }
 
     //分割开关,不传默认false
@@ -110,7 +157,7 @@ public class VoiceRegisterConfig extends SPManager {
         return (Boolean) SPUtil.get(REGISTER_DIASWITCH, false);
     }
 
-    public static void setRegisterDiaSwitch(Boolean DiaSwitch) {
+    private static void setRegisterDiaSwitch(Boolean DiaSwitch) {
         SPUtil.put(REGISTER_DIASWITCH, DiaSwitch);
     }
 
@@ -119,7 +166,7 @@ public class VoiceRegisterConfig extends SPManager {
         return (Integer) SPUtil.get(REGISTER_FILTERTYPE, -1);
     }
 
-    public static void setRegisterFiltertype(Integer filtertype) {
+    private static void setRegisterFiltertype(Integer filtertype) {
         SPUtil.put(REGISTER_FILTERTYPE, filtertype);
     }
 
@@ -128,7 +175,7 @@ public class VoiceRegisterConfig extends SPManager {
         return (String) SPUtil.get(REGISTER_VOICEFILTER, "");
     }
 
-    public static void setRegisterVoiceFilter(int VoiceFilter) {
+    private static void setRegisterVoiceFilter(int VoiceFilter) {
         SPUtil.put(REGISTER_VOICEFILTER, VoiceFilter);
     }
 
@@ -146,8 +193,32 @@ public class VoiceRegisterConfig extends SPManager {
     private static final String VERIFICATION_VADCLIPPINGRATIO = "verification_vadClippingRatio"; //验证截幅比（%） 默认5
     public static final String VERIFICATION_VOICEASV = "verification_voiceAsv"; //活体检测开关 不传默认true
     public static final String VERIFICATION_SPOOFSCORE = "verification_spoofscore"; //活体检测阈值 默认0.6
-    public static final String VERIFICATION_ASV = "verification_asv1spoofscore"; //1:1阈值 默认65
-    public static final String VERIFICATION_ASV1N = "verification_asv1Nspoofscore"; //1:N阈值 默认65
+    private static final String VERIFICATION_ASRSWITCH = "verification_asrSwitch"; //文本检测开关
+    private static final String VERIFICATION_ASRTHRESHOLD = "verification_asrThreshold"; //文本检测阈值:0-1.0
+
+
+
+    //    文本检测开关,不传默认true
+    public static Boolean getVerificationAsrswitch() {
+        return (Boolean) SPUtil.get(VERIFICATION_ASRSWITCH, true);
+    }
+
+    private static void setVerificationAsrswitch(Boolean asrSwitch) {
+        SPUtil.put(VERIFICATION_ASRSWITCH, asrSwitch);
+    }
+
+    // 文本阈值,0.75
+    public static float getVerificationAsrthreshold () {
+        return (float) SPUtil.get(VERIFICATION_ASRTHRESHOLD, 0.75f);
+    }
+
+    private static void setVerificationAsrthreshold (float asrThreshold) {
+        SPUtil.put(VERIFICATION_ASRTHRESHOLD, asrThreshold);
+    }
+
+
+
+
     //    验证质检开关,不传默认true
     public static Boolean getVerificationVadswicth() {
         return (Boolean) SPUtil.get(VERIFICATION_VADSWICTH, true);
@@ -161,45 +232,45 @@ public class VoiceRegisterConfig extends SPManager {
         return (Boolean) SPUtil.get(VERIFICATION_VADSWICTH_SERVICE, false);
     }
 
-    public static void setVerificationVadswicthService(Boolean vadSwicth) {
+    private static void setVerificationVadswicthService(Boolean vadSwicth) {
         SPUtil.put(VERIFICATION_VADSWICTH_SERVICE, vadSwicth);
     }
 
 
 
     //    验证音量大小（dB） 默认35f
-    public static float getVerificationVadsnr() {
+    public static float getSpeechAvgEnergyStandard() {
         return (float) SPUtil.get(VERIFICATION_VADSNR, -35f);
     }
 
-    public static void setVerificationVadsnr(float Vadsnr) {
+    public static void setSpeechAvgEnergyStandard(float Vadsnr) {
         SPUtil.put(VERIFICATION_VADSNR, Vadsnr);
     }
 
     //验证有效时长（秒） 默认3
-    public static int getVerificationSpeechduration() {
+    public static int getVerifySpeechDurationStandard() {
         return (int) SPUtil.get(VERIFICATION_SPEECHDURATION, 15);
     }
 
-    public static void setVerificationSpeechduration(int Speechduration) {
+    public static void setVerifySpeechDurationStandard(int Speechduration) {
         SPUtil.put(VERIFICATION_SPEECHDURATION, Speechduration);
     }
 
     //验证信噪比（dB） 默认8
-    public static float getVerificationSpeechEnergy() {
+    public static float getSnrStandard() {
         return (float) SPUtil.get(VERIFICATION_SPEECHENERGY, 8.0f);
     }
 
-    public static void setVerificationSpeechEnergy(float SpeechEnergy) {
+    public static void setSnrStandard(float SpeechEnergy) {
         SPUtil.put(VERIFICATION_SPEECHENERGY, SpeechEnergy);
     }
 
     ////验证截幅比（%） 默认5
-    public static float getVerificationVadclippingratio() {
+    public static float getClipPercentStandard() {
         return (float) SPUtil.get(VERIFICATION_VADCLIPPINGRATIO, 5.f);
     }
 
-    public static void setVerificationVadclippingratio(float Vadclippingratio) {
+    public static void setClipPercentStandard(float Vadclippingratio) {
         SPUtil.put(VERIFICATION_VADCLIPPINGRATIO, Vadclippingratio);
     }
 
@@ -214,11 +285,11 @@ public class VoiceRegisterConfig extends SPManager {
     }
 
     //活体检测阈值 默认0.52
-    public static float getVerificationSpoofscore() {
+    public static float getVerificationAsvspoof_score() {
         return (float) SPUtil.get(VERIFICATION_SPOOFSCORE, 0.6f);
     }
 
-    public static void setVerificationSpoofscore(float Spoofscore) {
+    public static void getVerificationAsvspoof_score(float Spoofscore) {
         SPUtil.put(VERIFICATION_SPOOFSCORE, Spoofscore);
     }
 
@@ -227,15 +298,17 @@ public class VoiceRegisterConfig extends SPManager {
         return (Integer) SPUtil.get(VERIFICATION_VADLEVEL, 3);
     }
 
-    public static void setVerificationVadLevel(Integer vadSwicth) {
-        SPUtil.put(VERIFICATION_VADLEVEL, vadSwicth);
+    public static void setVerificationVadLevel(Integer vadLevel) {
+        if (vadLevel!=1|vadLevel!=3|vadLevel!=5){
+            SPUtil.put(VERIFICATION_VADLEVEL, vadLevel);
+        }
     }
     //分割开关,不传默认false
     public static Boolean getVerificationDiaSwitch() {
         return (Boolean) SPUtil.get(VERIFICATION_DIASWITCH, false);
     }
 
-    public static void setVerificationDiaSwitch(Boolean diaSwitch) {
+    private static void setVerificationDiaSwitch(Boolean diaSwitch) {
         SPUtil.put(VERIFICATION_DIASWITCH, diaSwitch);
     }
     //分割过滤类型:-1:不过滤,0关键字过滤,1声纹过滤。    若diaSwitch为true则必传
@@ -243,7 +316,7 @@ public class VoiceRegisterConfig extends SPManager {
         return (Integer) SPUtil.get(VERIFICATION_FILTERTYPE, -1);
     }
 
-    public static void setVerificationFiltertype(Integer filtertype) {
+    private static void setVerificationFiltertype(Integer filtertype) {
         SPUtil.put(VERIFICATION_FILTERTYPE, filtertype);
     }
     //声纹过滤：过滤分组    关键字过滤：关键字串(例：你好/我好&大家好)
@@ -251,25 +324,7 @@ public class VoiceRegisterConfig extends SPManager {
         return (String) SPUtil.get(VERIFICATION_VOICEFILTER, "");
     }
 
-    public static void setVerificationVoiceFilter(int VoiceFilter) {
+    private static void setVerificationVoiceFilter(int VoiceFilter) {
         SPUtil.put(VERIFICATION_VOICEFILTER, VoiceFilter);
-    }
-
-    //1:1阈值 默认65
-    public static Integer getVerificationAsv() {
-        return (Integer) SPUtil.get(VERIFICATION_ASV, 65);
-    }
-
-    public static void setVerificationAsv(Integer asv) {
-        SPUtil.put(VERIFICATION_FILTERTYPE, asv);
-    }
-
-    //1:N阈值 默认65
-    public static Integer getVerificationAsv1N() {
-        return (Integer) SPUtil.get(VERIFICATION_ASV1N, 65);
-    }
-
-    public static void setVerificationAsv1N(Integer asv) {
-        SPUtil.put(VERIFICATION_ASV1N, asv);
     }
 }

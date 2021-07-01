@@ -16,6 +16,7 @@ import com.common.voicedna.api.DnaPresenter;
 import com.common.voicedna.bean.DnaErrorCode;
 import com.common.voicedna.bean.FileBean;
 import com.common.voicedna.bean.GroupBean;
+import com.common.voicedna.bean.ServiceType;
 import com.common.voicedna.bean.TokenBean;
 import com.common.voicedna.bean.VoiceoperateDetailBean;
 import com.common.voicedna.bean.VoiceprintTaskDetailBean;
@@ -28,7 +29,10 @@ import com.common.voicedna.utils.InstanceUtil;
 import com.common.voicedna.utils.SPManager;
 import com.common.voicedna.utils.SPUtil;
 import com.common.voicedna.utils.UuidUtis;
+import com.google.gson.Gson;
 import com.iva.AsvSpoofDetect;
+import com.iva.FlacFormatTransformation.AudioDataInfo;
+import com.iva.FormatConversionNative;
 import com.iva.QualityCheck;
 import com.iva.VoiceAsvSpoofDetect.AsvSpoofDetectConfig;
 import com.iva.VoiceAsvSpoofDetect.AsvSpoofDetectListener;
@@ -38,12 +42,14 @@ import com.iva.VoiceQualityCheck.QualityCheckListener;
 import com.iva.VoiceQualityCheck.VadConfig;
 import com.iva.constant.ErrorCode;
 import com.iva.constant.InitListener;
+import com.voiceai.voicedna.bean.dto.AlgoCfgInfo;
 import com.voiceai.voicedna.bean.dto.DynamicNumber;
 import com.voiceai.voicedna.bean.dto.DynamicNumberIdentityTask;
 import com.voiceai.voicedna.bean.dto.DynamicNumberRegisterTask;
 import com.voiceai.voicedna.bean.dto.DynamicNumerIdnTaskResult;
 import com.voiceai.voicedna.bean.dto.DynamicNumerRegisTaskFileResult;
 import com.voiceai.voicedna.bean.dto.DynamicNumerRegisTaskResult;
+import com.voiceai.voicedna.bean.dto.FileInfo;
 import com.voiceai.voicedna.bean.dto.IdnTaskDetail;
 import com.voiceai.voicedna.bean.dto.RegisTaskDetail;
 import com.voiceai.voicedna.bean.dto.VOTask;
@@ -54,6 +60,7 @@ import com.voiceai.voicedna.bean.res.dynamicnumber.DynamicNumberRegisTaskExecRes
 import com.voiceai.voicedna.bean.res.dynamicnumber.DynamicNumberRegisTaskSubmitRes;
 import com.voiceai.voicedna.bean.res.dynamicnumber.DynamicNumberRes;
 import com.voiceai.voicedna.bean.res.file.UploadFileRes;
+import com.voiceai.voicedna.bean.res.other.AlgoCfgRes;
 import com.voiceai.voicedna.bean.res.other.DNIdentityRes;
 import com.voiceai.voicedna.bean.res.other.IdentifyRes;
 import com.voiceai.voicedna.bean.res.other.RegisterRes;
@@ -65,6 +72,8 @@ import com.voiceai.voicedna.client.VoiceDnaConfiguration;
 import com.voiceai.voicedna.constant.FilterType;
 import com.voiceai.voicedna.constant.IdnType;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,8 +83,9 @@ import java.util.Map;
 import java.util.Stack;
 
 import static android.content.ContentValues.TAG;
-import static com.common.voicedna.api.DnaHostUrl.HOST_URL;
+import static com.common.voicedna.api.DnaHostUrl.dnaServer;
 import static com.common.voicedna.api.DnaHostUrl.fileServer;
+import static com.voiceai.voicedna.util.OkHttpUtils.JSON;
 
 public class IdVerifier {
     private static IdVerifier instance;
@@ -86,7 +96,6 @@ public class IdVerifier {
     private AsvSpoofDetectConfig asvSpoofDetectConfig;
     private VerifyListener verifyListener;
     DefaultVoiceDnaClient client;
-    float Asv = 0f;
 
     public static IdVerifier getInstance() {
         if (instance == null) {
@@ -112,7 +121,7 @@ public class IdVerifier {
      * @param appsecret
      * @param callback
      */
-    public void init(Context context, String app_id, String appsecret, DnaCallback<Integer> callback) {
+    public void init(Context context, String app_id, String appsecret, ServiceType serviceId, String dnaServer, String fileServer, DnaCallback<Integer> callback) {
         SPUtil.getSP(context);
         mAsvSpoofDetect = AsvSpoofDetect.getInstance();
         mQualityCheck = QualityCheck.getInstance();
@@ -120,8 +129,21 @@ public class IdVerifier {
             @Override
             public void run() {
                 try {
-                    VoiceDnaConfiguration voiceDnaConfiguration = new VoiceDnaConfiguration(app_id, appsecret, HOST_URL, fileServer);
+                    VoiceDnaConfiguration voiceDnaConfiguration = new VoiceDnaConfiguration(app_id, appsecret, dnaServer, fileServer, serviceId.i);
                     client = new DefaultVoiceDnaClient(voiceDnaConfiguration);
+//                    String json = client.getAlgoCfgStr();
+//                    AlgoCfgRes algoCfgRes = new Gson().fromJson(json, AlgoCfgRes.class);
+//                    if (algoCfgRes.getCode() == 0) {
+//                        initConfigure(algoCfgRes.getData());
+//                    } else {
+//                        AppExecutors.getInstance().mainThread().execute(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                callback.onError(algoCfgRes.getCode(), algoCfgRes.getMsg());
+//                            }
+//                        });
+//                        return;
+//                    }
                     initAsvSpoofDetect(context, callback);
                 } catch (Exception e) {
                     AppExecutors.getInstance().mainThread().execute(new Runnable() {
@@ -135,6 +157,51 @@ public class IdVerifier {
 
             }
         });
+    }
+
+    /**
+     * 初始化配置
+     *
+     * @param data
+     */
+    private void initConfigure(AlgoCfgInfo data) {
+        initVerify(data.getVerify());
+        initRegis(data.getRegis());
+    }
+
+
+    public void initVerify(AlgoCfgInfo.AlgoCfg Verify) {
+        VoiceRegisterConfig.setVerificationVadLevel(Verify.getVadGrade());
+        VoiceRegisterConfig.getVerificationAsvspoof_score(Verify.getThresholdAsr().intValue());
+        AlgoCfgInfo.VadInfo vad = null;
+        if (Verify.getVadGrade() == 1) {
+            vad = Verify.getVadList().get(0);
+        } else if (Verify.getVadGrade() == 3) {
+            vad = Verify.getVadList().get(1);
+        } else if (Verify.getVadGrade() == 5) {
+            vad = Verify.getVadList().get(2);
+        }
+        VoiceRegisterConfig.setVerifySpeechDurationStandard(vad.getSpeechDurationStandard().intValue());
+        VoiceRegisterConfig.setSpeechAvgEnergyStandard(vad.getSpeechAvgEnergyStandard().floatValue());
+        VoiceRegisterConfig.setSnrStandard(vad.getSnrStandard().intValue());
+        VoiceRegisterConfig.setClipPercentStandard(vad.getClipPercentStandard().intValue());
+    }
+
+    public void initRegis(AlgoCfgInfo.AlgoCfg Verify) {
+        VoiceRegisterConfig.setRegisterVadLevel(Verify.getVadGrade());
+        VoiceRegisterConfig.setRegisterSpoofscore(Verify.getThresholdAsr().intValue());
+        AlgoCfgInfo.VadInfo vad = null;
+        if (Verify.getVadGrade() == 1) {
+            vad = Verify.getVadList().get(0);
+        } else if (Verify.getVadGrade() == 3) {
+            vad = Verify.getVadList().get(1);
+        } else if (Verify.getVadGrade() == 5) {
+            vad = Verify.getVadList().get(2);
+        }
+        VoiceRegisterConfig.setRegisterSpeechDurationStandard(vad.getSpeechDurationStandard().intValue());
+        VoiceRegisterConfig.setRegisterSpeechenergy(vad.getSpeechAvgEnergyStandard().floatValue());
+        VoiceRegisterConfig.setRegisterVadSNR(vad.getNoiseAvgEnergyStandard().intValue());
+        VoiceRegisterConfig.setRegisterVadClippingRatio(vad.getClipPercentStandard().floatValue());
     }
 
     /**
@@ -197,16 +264,18 @@ public class IdVerifier {
     /**
      * 注册
      *
-     * @param groupName 目标声纹分组ID
-     * @param file      文件
+     * @param groupName 目标声纹分组名称
+     * @param bytes     文件
      */
-    public void register(String groupName, File file, DnaCallback<RegisTaskDetail> callback) {
+    public void register(String groupName, byte[] bytes, String targetUser, DnaCallback<RegisTaskDetail> callback) {
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
+                AudioDataInfo audioDataInfo = new AudioDataInfo();
+                int i = FormatConversionNative.formatConversionToFlac(bytes, audioDataInfo);
                 try {
-                    int var1 = RegisterVADASV(PcmToWav.toByteArray(file));
-                    if (var1 != 0) {
+                    int var1 = RegisterVADASV(bytes);
+                    if (var1 != 0|i!=0) {
                         return;
                     }
                 } catch (Exception e) {
@@ -214,20 +283,24 @@ public class IdVerifier {
                     callback.onError(var1, "质检活检异常");
                     return;
                 }
-                List<File> files = new ArrayList<>();
-                files.add(file);
+
+                List<FileInfo> files = new ArrayList<>();
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setData(audioDataInfo.getData());
+                fileInfo.setName(targetUser);
+                files.add(fileInfo);
                 VPTask vpTask = VPTask.builder()
                         .groupName(groupName)
                         .filterType(FilterType.NoFilter)
                         .diaSwitch(false)
                         .vadSwitch(false)
-                        .files(files)
+                        .fileInfos(files)
+                        .channel(2)
                         .build();
                 RegisterRes res = client.register(vpTask);
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-
                         if (res.getCode() == 0) {
                             if (res.getData() != null && res.getData().size() > 0) {
                                 callback.onSuccess(res.getData().get(0));
@@ -249,28 +322,32 @@ public class IdVerifier {
      * 验证声纹
      *
      * @param groupName  目标声纹名称
-     * @param file       文件
+     * @param bytes      文件
      * @param targetUser 1:1比对用户不能为空 1:N 比对用户必须为空
-     * @param autoRegis  自动入库条件,不传条件代表不开启
      */
-    public void Voiceoperate(String groupName, File file, String targetUser, List<AutoRegisData> autoRegis, DnaCallback<IdnTaskDetail> callback) {
+    public void identify(String groupName, byte[] bytes, String targetUser, DnaCallback<IdnTaskDetail> callback) {
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
+                AudioDataInfo audioDataInfo = new AudioDataInfo();
+                int i = FormatConversionNative.formatConversionToFlac(bytes, audioDataInfo);
                 try {
-                    int var1 = VerificationVadasv(PcmToWav.toByteArray(file));
-                    if (var1 != 0) {
+                    int var1 = VerificationVadasv(bytes);
+                    if (var1 != 0|i !=0) {
                         return;
                     }
+
                 } catch (Exception e) {
                     var1 = 400001;
                     callback.onError(var1, "质检活检异常");
                     return;
                 }
-                List<File> files = new ArrayList<>();
-                files.add(file);
+                List<FileInfo> files = new ArrayList<>();
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setData(audioDataInfo.getData());
+                fileInfo.setName(groupName);
+                files.add(fileInfo);
                 VOTask voTask;
-
                 if (EmptyUtil.isEmpty(targetUser)) {
                     voTask = VOTask.builder()
                             .groupName(groupName)
@@ -278,9 +355,9 @@ public class IdVerifier {
                             .idnType(IdnType.N)
                             .diaSwitch(false)
                             .vadSwitch(false)
-                            .files(files)
+                            .fileInfos(files)
+                            .channel(2)
                             .build();
-                    Asv = VoiceRegisterConfig.getVerificationAsv();
                 } else {
                     voTask = VOTask.builder()
                             .groupName(groupName)
@@ -288,10 +365,10 @@ public class IdVerifier {
                             .idnType(IdnType.ONE)
                             .diaSwitch(false)
                             .vadSwitch(false)
+                            .channel(2)
                             .targetUser(targetUser)
-                            .files(files)
+                            .fileInfos(files)
                             .build();
-                    Asv = VoiceRegisterConfig.getVerificationAsv1N();
                 }
                 IdentifyRes res = client.identify(voTask);
 
@@ -303,7 +380,7 @@ public class IdVerifier {
                                 List<IdnTaskDetail.ExecResultItem> taskResults = new ArrayList<>();
                                 if (res.getData() != null && res.getData().size() > 0) {
                                     for (IdnTaskDetail.ExecResultItem item : res.getData().get(0).getTaskResults().get(0).getExecResults()) {
-                                        if (Double.valueOf(item.getScore()) >= Asv) {
+                                        if (item.getIsPass()) {
                                             taskResults.add(item);
                                         }
                                     }
@@ -368,7 +445,7 @@ public class IdVerifier {
             @Override
             public void run() {
                 DynamicNumberRegisTaskCreateRes res = client.createDynamicNumberRegisTask(groupId, tagName,
-                        true, 3, true, true, true, 0.75f, 0.5f, 0.5f);
+                        VoiceRegisterConfig.getRegisterVadSwicth(), VoiceRegisterConfig.getRegisterVadLevel(), VoiceRegisterConfig.getRegisterVoiceAsv(), VoiceRegisterConfig.getRegisterAsrSwitch(), VoiceRegisterConfig.getRegisterVprcSwitch(), VoiceRegisterConfig.getRegisterSpoofscore(), VoiceRegisterConfig.getRegisterAsrThreshold(), VoiceRegisterConfig.getRegisterVprcThrshold(), 2);
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -387,19 +464,33 @@ public class IdVerifier {
      * 提交单音频（注册任务）
      *
      * @param taskId   任务ID
-     * @param file     文件
+     * @param bytes    文件
      * @param numberId 随机数ID
      */
-    public void submitDynamicNumberRegisTask(String taskId, File file, String numberId, DnaCallback<DynamicNumerRegisTaskFileResult> callback) {
+    public void submitDynamicNumberRegisTask(String taskId, byte[] bytes, String numberId, DnaCallback<DynamicNumerRegisTaskFileResult> callback) {
 
         try {
             AppExecutors.getInstance().networkIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    List<File> files = new ArrayList<>();
-                    files.add(file);
-                    Map<File, UploadFileRes> map = client.uploadFile("0", files);
+                    AudioDataInfo audioDataInfo = new AudioDataInfo();
+                    int i = FormatConversionNative.formatConversionToFlac(bytes, audioDataInfo);
+                    List<FileInfo> files = new ArrayList<>();
+                    FileInfo fileInfo = new FileInfo();
+                    fileInfo.setData(audioDataInfo.getData());
+                    fileInfo.setName(taskId);
+                    files.add(fileInfo);
+                    Map<FileInfo, UploadFileRes> map = client.uploadBytes("0", files);
                     List<UploadFileRes> list = new ArrayList<>(map.values());
+                    if (list.get(0).getCode() != 0) {
+                        AppExecutors.getInstance().mainThread().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                callback.onError(list.get(0).getCode(), list.get(0).getMsg());
+                            }
+                        });
+                        return;
+                    }
                     AppExecutors.getInstance().mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -413,13 +504,13 @@ public class IdVerifier {
                     AppExecutors.getInstance().mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            if (res.getCode()==0){
+                            if (res.getCode() == 0) {
                                 if (res.getData().getStatus() == 0) {
                                     callback.onSuccess(res.getData());
                                 } else {
                                     callback.onError(res.getData().getStatus(), res.getData().getDescription());
                                 }
-                            }else {
+                            } else {
                                 callback.onError(res.getCode(), res.getMsg());
                             }
 
@@ -427,7 +518,7 @@ public class IdVerifier {
                     });
                 }
             });
-        }catch ( Exception e){
+        } catch (Exception e) {
             AppExecutors.getInstance().mainThread().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -454,13 +545,13 @@ public class IdVerifier {
                     AppExecutors.getInstance().mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            if (res.getCode()==0){
+                            if (res.getCode() == 0) {
                                 if (res.getData().getStatus() == 0) {
                                     callback.onSuccess(res.getData());
                                 } else {
                                     callback.onError(res.getData().getStatus(), res.getData().getDescription());
                                 }
-                            }else {
+                            } else {
                                 callback.onError(res.getCode(), res.getMsg());
                             }
 
@@ -482,18 +573,23 @@ public class IdVerifier {
      * 动态数字声纹比对
      *
      * @param numberId   随机数ID
-     * @param file       文件
+     * @param bytes      文件
      * @param groupName  分组名称
      * @param targetUser 昵称
      * @param callback   回调
      */
-    public void dynamicNumberIdentity(String numberId, File file, String groupName, String targetUser, DnaCallback<DynamicNumerIdnTaskResult> callback) {
+    public void dynamicNumberIdentity(String numberId, byte[] bytes, String groupName, String targetUser, DnaCallback<DynamicNumerIdnTaskResult> callback) {
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                List<File> files = new ArrayList<>();
-                files.add(file);
-                Map<File, UploadFileRes> map = client.uploadFile("1", files);
+                AudioDataInfo audioDataInfo = new AudioDataInfo();
+                int i = FormatConversionNative.formatConversionToFlac(bytes, audioDataInfo);
+                List<FileInfo> files = new ArrayList<>();
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setData(audioDataInfo.getData());
+                fileInfo.setName(groupName);
+                files.add(fileInfo);
+                Map<FileInfo, UploadFileRes> map = client.uploadBytes("1", files);
                 List<UploadFileRes> list = new ArrayList<>(map.values());
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
@@ -510,44 +606,52 @@ public class IdVerifier {
                             .numberId(numberId)
                             .fileId(list.get(0).getData().getFileId())
                             .groupName(groupName)
-                            .vadSwitch(true)
-                            .vadLevel(3)
-                            .asvSwitch(true)
-                            .asrSwitch(true)
-                            .asrThreshold(0.75f)
+                            .vadSwitch(VoiceRegisterConfig.getVerificationVadswicth())
+                            .vadLevel(VoiceRegisterConfig.getVerificationVadLevel())
+                            .asvSwitch(VoiceRegisterConfig.getVerificationVoiceAsv())
+                            .asvThreshold(VoiceRegisterConfig.getVerificationAsvspoof_score())
+                            .asrSwitch(VoiceRegisterConfig.getVerificationAsrswitch())
+                            .asrThreshold(VoiceRegisterConfig.getVerificationAsrthreshold())
+                            .channel(2)
                             .build();
-                    Asv = VoiceRegisterConfig.getVerificationAsv();
                 } else {
                     identityTask = DynamicNumberIdentityTask.builder()
                             .numberId(numberId)
                             .fileId(list.get(0).getData().getFileId())
                             .groupName(groupName)
                             .targetUser(targetUser)
-                            .vadSwitch(true)
-                            .vadLevel(3)
-                            .asvSwitch(true)
-                            .asrThreshold(0.75f)
+                            .vadLevel(VoiceRegisterConfig.getVerificationVadLevel())
+                            .vadSwitch(VoiceRegisterConfig.getVerificationVadswicth())
+                            .asvSwitch(VoiceRegisterConfig.getVerificationVoiceAsv())
+                            .asrSwitch(VoiceRegisterConfig.getVerificationAsrswitch())
+                            .asrThreshold(VoiceRegisterConfig.getVerificationAsrthreshold())
+                            .asvThreshold(VoiceRegisterConfig.getVerificationAsvspoof_score())
+                            .channel(2)
                             .build();
-                    Asv = VoiceRegisterConfig.getVerificationAsv1N();
                 }
                 DNIdentityRes res = client.dynamicNumberIdentity(identityTask);
                 AppExecutors.getInstance().mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        if (res.getData().getStatus() == 0) {
-                            List<DynamicNumerIdnTaskResult.ExecResultItem> items = new ArrayList<>();
-                            if (res.getData().getExecResults() != null) {
-                                for (int i = 0; i < res.getData().getExecResults().size(); i++) {
-                                    if (Double.valueOf(res.getData().getExecResults().get(i).getScore()) >= Asv) {
-                                        items.add(res.getData().getExecResults().get(i));
+                        if (res.getCode() == 0) {
+                            if (res.getData().getStatus() == 0) {
+                                List<DynamicNumerIdnTaskResult.ExecResultItem> items = new ArrayList<>();
+                                if (res.getData().getExecResults() != null) {
+                                    for (int i = 0; i < res.getData().getExecResults().size(); i++) {
+                                        if (res.getData().getExecResults().get(i).getIsPass()) {
+                                            items.add(res.getData().getExecResults().get(i));
+                                        }
                                     }
                                 }
+                                res.getData().setExecResults(items);
+                                callback.onSuccess(res.getData());
+                            } else {
+                                callback.onError(res.getData().getStatus(), res.getData().getDescription());
                             }
-                            res.getData().setExecResults(items);
-                            callback.onSuccess(res.getData());
                         } else {
-                            callback.onError(res.getData().getStatus(), res.getData().getDescription());
+                            callback.onError(res.getCode(), res.getMsg());
                         }
+
                     }
                 });
 
@@ -627,7 +731,11 @@ public class IdVerifier {
                 @Override
                 public void onVadResult(int error, QualityCheckInfo qualityCheckInfo, byte[] data) {
                     info = qualityCheckInfo;
-                    if (qualityCheckInfo.getSpeechDuration() < VoiceRegisterConfig.getRegisterSpeechDuration()) {
+                    Log.e("注册", "有效时长" + VoiceRegisterConfig.getRegisterSpeechDurationStandard() +
+                            "\n平均能量" + VoiceRegisterConfig.getRegisterSpeechenergy() +
+                            "\n信噪比" + VoiceRegisterConfig.getRegisterVadSNR() +
+                            "\n截幅比" + VoiceRegisterConfig.getRegisterClippingRatio());
+                    if (qualityCheckInfo.getSpeechDuration() < VoiceRegisterConfig.getRegisterSpeechDurationStandard()) {
                         msg = "有效时长--有效时长过短";
                         var1 = 400002;
                     } else if (qualityCheckInfo.getSpeechEnergy() < VoiceRegisterConfig.getRegisterSpeechenergy()) {
@@ -636,7 +744,7 @@ public class IdVerifier {
                     } else if (qualityCheckInfo.getEstSnr() < VoiceRegisterConfig.getRegisterVadSNR()) {
                         msg = "信噪比--环境噪音大";
                         var1 = 400004;
-                    } else if (qualityCheckInfo.getClippingRatio() > VoiceRegisterConfig.getVerificationVadclippingratio()) {
+                    } else if (qualityCheckInfo.getClippingRatio() > VoiceRegisterConfig.getRegisterClippingRatio()) {
                         msg = "截幅比--音量过大";
                         var1 = 400005;
                     }
@@ -648,6 +756,7 @@ public class IdVerifier {
                 @Override
                 public void onAsvResult(int error, AsvSpoofDetectOutputData asvSpoofDetectOutputData, byte[] data) {
                     asvSpoofDetectOutput = asvSpoofDetectOutputData;
+                    Log.e("验证", "活体" + VoiceRegisterConfig.getRegisterSpoofscore());
                     if (VoiceRegisterConfig.getRegisterSpoofscore() > asvSpoofDetectOutputData.getAsvspoof_score()) {
                         if (var1 == 0) {
                             msg = "  活体--活体检测不通过";
@@ -683,20 +792,24 @@ public class IdVerifier {
         info = null;
         asvSpoofDetectOutput = null;
         if (VoiceRegisterConfig.getVerificationVadswicth()) {
+            Log.e("验证", "有效时长" + VoiceRegisterConfig.getVerifySpeechDurationStandard() +
+                    "\n平均能量" + VoiceRegisterConfig.getSpeechAvgEnergyStandard() +
+                    "\n信噪比" + VoiceRegisterConfig.getSnrStandard() +
+                    "\n截幅比" + VoiceRegisterConfig.getClipPercentStandard());
             mQualityCheck.audioVADCheck(bytes, 16000, true, new QualityCheckListener() {
                 @Override
                 public void onVadResult(int error, QualityCheckInfo qualityCheckInfo, byte[] data) {
                     info = qualityCheckInfo;
-                    if (VoiceRegisterConfig.getVerificationSpeechduration() > qualityCheckInfo.getSpeechDuration()) {
+                    if (VoiceRegisterConfig.getVerifySpeechDurationStandard() > qualityCheckInfo.getSpeechDuration()) {
                         msg = "有效时长--有效时长过短";
                         var1 = 400002;
-                    } else if (qualityCheckInfo.getSpeechEnergy() < VoiceRegisterConfig.getVerificationVadsnr()) {
+                    } else if (qualityCheckInfo.getSpeechEnergy() < VoiceRegisterConfig.getSpeechAvgEnergyStandard()) {
                         var1 = 400003;
                         msg = "平均能量--音量过小";
-                    } else if (qualityCheckInfo.getEstSnr() < VoiceRegisterConfig.getVerificationSpeechEnergy()) {
+                    } else if (qualityCheckInfo.getEstSnr() < VoiceRegisterConfig.getSnrStandard()) {
                         msg = "信噪比--环境噪音大";
                         var1 = 400004;
-                    } else if (qualityCheckInfo.getClippingRatio() > VoiceRegisterConfig.getVerificationVadclippingratio()) {
+                    } else if (qualityCheckInfo.getClippingRatio() > VoiceRegisterConfig.getClipPercentStandard()) {
                         msg = "截幅比--音量过大";
                         var1 = 400005;
                     }
@@ -708,7 +821,8 @@ public class IdVerifier {
                 @Override
                 public void onAsvResult(int error, AsvSpoofDetectOutputData asvSpoofDetectOutputData, byte[] data) {
                     asvSpoofDetectOutput = asvSpoofDetectOutputData;
-                    if (VoiceRegisterConfig.getVerificationSpoofscore() > asvSpoofDetectOutputData.getAsvspoof_score()) {
+                    Log.e("验证", "活体" + VoiceRegisterConfig.getVerificationAsvspoof_score());
+                    if (VoiceRegisterConfig.getVerificationAsvspoof_score() > asvSpoofDetectOutputData.getAsvspoof_score()) {
                         if (var1 == 0) {
                             msg = "活体--活体检测不通过";
                             var1 = 400006;
